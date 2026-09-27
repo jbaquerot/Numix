@@ -19,7 +19,7 @@
 
 ## 2. Reglas matemáticas y dominio
 
-- [ ] T004 Definir constantes de reglas, dificultades, duraciones y fases de partida en `js/constants.js`.
+- [x] T004 Definir constantes de reglas, dificultades, duraciones y fases de partida en `js/constants.js`.
 - [ ] T005 Implementar tokenización y análisis seguro de operaciones con números, operadores y paréntesis en `js/expression.js`.
 - [ ] T006 Implementar la validación de uso exacto de las cuatro cartas —incluyendo valores repetidos— en `js/expression.js`.
 - [ ] T007 Implementar la evaluación de operaciones, la precedencia y las restricciones de resultados enteros positivos en `js/expression.js`.
