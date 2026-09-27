@@ -30,7 +30,7 @@ Interfaz (UI y eventos) <--> Estado de partida <--> Dominio matemático y reglas
 Módulos JavaScript puros y sin acceso al DOM que se puedan probar de manera aislada:
 
 - Generación de objetivo entero entre 1 y 100 y de cuatro cartas enteras entre 1 y 10, permitiendo repeticiones.
-- Validación estructural de una operación: usa únicamente las cartas dadas, cada una una vez, y solo `+`, `−`, `×`, `÷` y paréntesis.
+- Validación estructural de una operación: usa un subconjunto de las cartas dadas, sin repetir ninguna más veces de las disponibles, y solo `+`, `−`, `×`, `÷` y paréntesis.
 - Evaluación segura de operaciones sin ejecutar texto arbitrario como código.
 - Comprobación de que todos los resultados intermedios y final sean enteros positivos; rechaza divisiones por cero y divisiones no exactas.
 - Cálculo de distancia al objetivo, puntuación de ronda —incluyendo empates— y clasificación final.
@@ -41,7 +41,7 @@ Un único objeto de estado en memoria representa la sesión:
 
 ```text
 Partida
-├── configuración: jugadoras, rondas (1–10), dificultad y duración
+├── configuración: jugadoras (1–4), rondas (5–10), dificultad y duración
 ├── ronda actual: índice, objetivo, cartas, tiempo restante y fase
 ├── respuestas: operación y resultado por jugadora
 └── marcador: puntos acumulados por jugadora
@@ -53,7 +53,7 @@ Las fases de una ronda serán: `preparada`, `resolviendo`, `introduciendo`, `res
 
 La interfaz se renderiza desde el estado actual y presenta estas vistas:
 
-1. **Configuración:** nombre o identificador de una o más jugadoras, número de rondas de 1 a 10 y dificultad: fácil (60 s), medio (45 s) o difícil (30 s).
+1. **Configuración:** nombre o identificador de 1 a 4 jugadoras, número de rondas de 5 a 10 y dificultad: fácil (60 s), medio (45 s) o difícil (30 s).
 2. **Resolución en papel:** objetivo, cuatro cartas, temporizador visible y marcador. No permite introducir respuestas mientras el tiempo está activo.
 3. **Introducción de operaciones:** formulario identificado para cada jugadora. Al enviar una respuesta válida, muestra inmediatamente su resultado; las respuestas ya enviadas no pueden reemplazarse.
 4. **Resultado de ronda:** lista de operaciones, resultados, distancia al objetivo, puntos concedidos y marcador acumulado.
@@ -101,7 +101,7 @@ La expresión se convierte en tokens permitidos y se analiza con una gramática 
 - Una resta exige resultado estrictamente positivo.
 - Suma y multiplicación deben conservar un entero positivo.
 
-La validación también compara el multiconjunto de números utilizados con las cuatro cartas entregadas, lo que permite valores repetidos y exige usar cada carta una sola vez.
+La validación también compara el multiconjunto de números utilizados con las cuatro cartas entregadas, lo que permite valores repetidos, el uso de un subconjunto de las cartas y nunca usar una carta más veces de las disponibles.
 
 ## Interfaces y servicios externos
 
@@ -142,10 +142,10 @@ No requiere compilación ni servidor. El archivo HTML cargará los módulos medi
 
 ## Pruebas y verificación
 
-- Pruebas unitarias de generación dentro de rangos, aceptación de cartas repetidas y uso exacto de las cuatro cartas.
+- Pruebas unitarias de generación dentro de rangos, aceptación de cartas repetidas y uso de subconjuntos de las cuatro cartas sin excederlas.
 - Pruebas de expresiones válidas, paréntesis, precedencia, divisiones no exactas, división por cero, ceros y resultados negativos intermedios.
 - Pruebas de puntuación: objetivo exacto, varios aciertos exactos, resultado más cercano y empates por proximidad.
-- Pruebas de transiciones de fase y finalización tras 1, 5 y 10 rondas.
+- Pruebas de transiciones de fase y finalización tras 5, 7 y 10 rondas.
 - Revisión manual responsive en móvil, tablet y portátil, con teclado y pantalla táctil cuando sea posible.
 - Prueba de despliegue en GitHub Pages verificando carga de módulos y rutas relativas.
 
