@@ -3,8 +3,8 @@ import { DIFFICULTIES } from "./constants.js";
 export function renderSetup(container, onSubmit) {
   container.innerHTML = `
     <form id="setup-form">
-      <label>Número de jugadoras <input name="playerCount" type="number" min="1" max="8" value="1" required></label>
-      <label>Rondas <input name="rounds" type="number" min="1" max="10" value="5" required></label>
+      <label>Número de jugadoras <select name="playerCount">${[1, 2, 3, 4].map((value) => `<option value="${value}">${value}</option>`).join("")}</select></label>
+      <label>Rondas <select name="rounds">${[5, 6, 7, 8, 9, 10].map((value) => `<option value="${value}">${value}</option>`).join("")}</select></label>
       <fieldset><legend>Dificultad</legend>${Object.entries(DIFFICULTIES).map(([key, value]) =>
         `<label><input type="radio" name="difficulty" value="${key}" ${key === "medium" ? "checked" : ""}> ${value.label} (${value.durationSeconds} s)</label>`).join("")}</fieldset>
       <button type="submit">Empezar partida</button>
@@ -20,6 +20,7 @@ export function renderSetup(container, onSubmit) {
 export function renderRound(container, game, secondsRemaining) {
   const { currentRound: round, players } = game;
   container.innerHTML = `
+    <h3>Ronda ${round.number} de ${game.settings.totalRounds}</h3>
     <p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p>
     <p class="target">Objetivo: <strong>${round.target}</strong></p>
     <ul class="cards" aria-label="Cartas disponibles">${round.cards.map((card) => `<li>${card}</li>`).join("")}</ul>
@@ -29,7 +30,7 @@ export function renderRound(container, game, secondsRemaining) {
 
 export function renderAnswerForms(container, game, onAnswer) {
   const { target, cards } = game.currentRound;
-  const keypad = [...cards, "+", "-", "*", "/", "(", ")"].map((key) => `<button type="button" class="key" data-key="${key}">${key === "/" ? "÷" : key}</button>`).join("");
+  const keypad = ["1", "2", "3", "+", "-", "4", "5", "6", "*", "/", "7", "8", "9", "(", ")", "0", "enter", "del", "CE"].map((key) => `<button type="button" class="key" data-key="${key}">${key === "/" ? "÷" : key}</button>`).join("");
   container.innerHTML = `<p class="target">Objetivo: <strong>${target}</strong></p><ul class="cards">${cards.map((card) => `<li>${card}</li>`).join("")}</ul>` + game.players.map((player) => `
     <form class="answer-form" data-player-id="${player.id}">
       <label>${player.name}<input name="expression" inputmode="text" placeholder="(2 + 3) × 4" required></label>
@@ -38,7 +39,7 @@ export function renderAnswerForms(container, game, onAnswer) {
     </form>`).join("");
   container.querySelectorAll("form").forEach((form) => {
     const input = form.elements.expression;
-    form.querySelectorAll(".key").forEach((button) => button.addEventListener("click", () => { input.value += button.dataset.key; input.focus(); }));
+    form.querySelectorAll(".key").forEach((button) => button.addEventListener("click", () => { const key = button.dataset.key; if (key === "del") input.value = input.value.slice(0, -1); else if (key === "CE") input.value = ""; else if (key === "enter") form.requestSubmit(); else input.value += key; input.focus(); }));
     form.addEventListener("submit", (event) => {
     event.preventDefault();
     const message = form.querySelector(".answer-message");
