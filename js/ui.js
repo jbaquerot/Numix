@@ -56,7 +56,7 @@ export function renderAnswerForms(container, game, onAnswer) {
 }
 
 export function renderRoundResults(container, answers, onNext) {
-  container.innerHTML = `<ul>${answers.map((answer) => `<li>${answer.playerName}: ${answer.expression} = ${answer.result} · ${answer.points} puntos</li>`).join("")}</ul><button id="next-round">Siguiente ronda</button>`;
+  container.innerHTML = `<ul class="round-results">${answers.map((answer) => `<li><span>${answer.playerName}: ${answer.expression} = <strong class="result-value">${answer.result}</strong></span><strong class="earned-points">+${answer.points}</strong></li>`).join("")}</ul><button id="next-round">Siguiente ronda</button>`;
   container.querySelector("button").addEventListener("click", onNext);
 }
 
