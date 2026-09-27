@@ -47,3 +47,15 @@ export function renderAnswerForms(container, game, onAnswer) {
     }
   }));
 }
+
+export function renderRoundResults(container, answers, onNext) {
+  container.innerHTML = `<ul>${answers.map((answer) => `<li>${answer.playerName}: ${answer.expression} = ${answer.result} · ${answer.points} puntos</li>`).join("")}</ul><button id="next-round">Siguiente ronda</button>`;
+  container.querySelector("button").addEventListener("click", onNext);
+}
+
+export function renderFinalResults(container, players, onRestart) {
+  const bestScore = Math.max(...players.map((player) => player.score));
+  const winners = players.filter((player) => player.score === bestScore).map((player) => player.name).join(", ");
+  container.innerHTML = `<p>¡Ganadora${winners.includes(",") ? "s" : ""}: ${winners}!</p><ul>${players.map((player) => `<li>${player.name}: ${player.score} puntos</li>`).join("")}</ul><button>Jugar de nuevo</button>`;
+  container.querySelector("button").addEventListener("click", onRestart);
+}
