@@ -68,7 +68,7 @@ const app = createApp((game) => {
   const round = game.currentRound;
   renderRound(roundContainer, game, remainingSeconds(round));
   if (round.phase === "entering") renderAnswerForms(roundContainer, game, app.submitAnswer);
-  if (round.phase === "results") renderRoundResults(roundContainer, round.answers.map((answer) => ({ ...answer, playerName: game.players.find((player) => player.id === answer.playerId).name })), () => app.startRound());
+  if (round.phase === "results") renderRoundResults(roundContainer, round.answers.map((answer) => ({ ...answer, playerName: game.players.find((player) => player.id === answer.playerId).name })), game.players, () => app.startRound());
 });
 
 renderSetup(setupContainer, (settings) => {
