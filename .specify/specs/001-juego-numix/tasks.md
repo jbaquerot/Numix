@@ -23,7 +23,7 @@
 - [x] T005 Implementar tokenización y análisis seguro de operaciones con números, operadores y paréntesis en `js/expression.js`.
 - [x] T006 Implementar la validación de uso exacto de las cuatro cartas —incluyendo valores repetidos— en `js/expression.js`.
 - [x] T007 Implementar la evaluación de operaciones, la precedencia y las restricciones de resultados enteros positivos en `js/expression.js`.
-- [ ] T008 [P] Crear pruebas de operaciones válidas, paréntesis, precedencia, cartas repetidas, divisiones no exactas, división por cero y resultados no positivos en `tests/expression.test.js`.
+- [x] T008 [P] Crear pruebas de operaciones válidas, paréntesis, precedencia, cartas repetidas, divisiones no exactas, división por cero y resultados no positivos en `tests/expression.test.js`.
 - [ ] T009 Implementar creación de partida, generación de objetivos y cartas, y creación de rondas en `js/game.js`.
 - [ ] T010 Implementar cálculo de distancia, puntos y empates exactos o por proximidad en `js/game.js`.
 - [ ] T011 Implementar transiciones de fase, control de temporizador basado en marca temporal y cierre de partidas en `js/game.js`.
