@@ -1,5 +1,28 @@
-/**
- * Reglas de partida, rondas, temporizador y puntuación.
- * Se implementarán en las tareas de dominio posteriores.
- */
-export {};
+import { DIFFICULTIES, GAME_RULES, ROUND_PHASES } from "./constants.js";
+
+const randomInteger = (minimum, maximum, random = Math.random) =>
+  Math.floor(random() * (maximum - minimum + 1)) + minimum;
+
+export function createRound(number, random = Math.random) {
+  return {
+    number,
+    target: randomInteger(GAME_RULES.targetMin, GAME_RULES.targetMax, random),
+    cards: Array.from({ length: GAME_RULES.cardsPerRound }, () =>
+      randomInteger(GAME_RULES.cardMin, GAME_RULES.cardMax, random)),
+    phase: ROUND_PHASES.prepared,
+    answers: [],
+  };
+}
+
+export function createGame({ players, totalRounds, difficulty }) {
+  if (!Array.isArray(players) || players.length < GAME_RULES.minPlayers) throw new Error("Añade al menos una jugadora.");
+  if (!Number.isInteger(totalRounds) || totalRounds < 1 || totalRounds > GAME_RULES.maxRounds) throw new Error("Elige entre 1 y 10 rondas.");
+  if (!DIFFICULTIES[difficulty]) throw new Error("Elige una dificultad válida.");
+  return { players: players.map((name, index) => ({ id: `p${index + 1}`, name, score: 0 })), settings: { totalRounds, difficulty, durationSeconds: DIFFICULTIES[difficulty].durationSeconds }, currentRound: null };
+}
+
+export function startRound(game, random = Math.random) {
+  const number = game.currentRound ? game.currentRound.number + 1 : 1;
+  if (number > game.settings.totalRounds) throw new Error("La partida ya ha terminado.");
+  return { ...game, currentRound: createRound(number, random) };
+}
