@@ -30,16 +30,27 @@ export function renderRound(container, game, secondsRemaining, onReady) {
 }
 
 export function renderAnswerForms(container, game, onAnswer) {
-  const { target, cards } = game.currentRound;
+  const { target, cards, answers } = game.currentRound;
   const keypad = ["1", "2", "3", "+", "-", "4", "5", "6", "*", "/", "7", "8", "9", "(", ")", "0", "enter", "del", "CE"].map((key) => `<button type="button" class="key" data-key="${key}">${key === "/" ? "÷" : key}</button>`).join("");
-  container.innerHTML = `<p class="target">Objetivo: <strong>${target}</strong></p><ul class="cards">${cards.map((card) => `<li>${card}</li>`).join("")}</ul>` + game.players.map((player) => `
+  container.innerHTML = `<p class="target">Objetivo: <strong>${target}</strong></p><ul class="cards">${cards.map((card) => `<li>${card}</li>`).join("")}</ul>` + game.players.map((player) => {
+    const answer = answers.find((entry) => entry.playerId === player.id);
+    if (answer) {
+      return `
+    <form class="answer-form" data-player-id="${player.id}">
+      <label>${player.name}<input name="expression" value="${answer.expression}" disabled></label>
+      <p class="answer-message success" role="status">Resultado: ${answer.result}</p>
+    </form>`;
+    }
+    return `
     <form class="answer-form" data-player-id="${player.id}">
       <label>${player.name}<input name="expression" inputmode="text" placeholder="(2 + 3) × 4" required></label>
       <div class="keypad" aria-label="Teclado matemático">${keypad}</div>
       <button>Comprobar</button><p class="answer-message" role="status"></p>
-    </form>`).join("");
-  container.querySelectorAll("form").forEach((form) => {
+    </form>`;
+  }).join("");
+  container.querySelectorAll(".answer-form").forEach((form) => {
     const input = form.elements.expression;
+    if (input.disabled) return;
     form.querySelectorAll(".key").forEach((button) => button.addEventListener("click", () => { const key = button.dataset.key; if (key === "del") input.value = input.value.slice(0, -1); else if (key === "CE") input.value = ""; else if (key === "enter") form.requestSubmit(); else input.value += key; input.focus(); }));
     form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -47,10 +58,10 @@ export function renderAnswerForms(container, game, onAnswer) {
     try {
       const result = onAnswer(form.dataset.playerId, input.value);
       message.textContent = `Resultado: ${result}`;
-      input.disabled = true;
-      form.querySelector("button").disabled = true;
+      message.classList.add("success");
     } catch (error) {
       message.textContent = error.message;
+      message.classList.add("error");
     }
     });
   });

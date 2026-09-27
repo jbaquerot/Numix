@@ -103,7 +103,11 @@ export function validateCards(tree, cards) {
 
   const available = cards.reduce((counts, card) => ({ ...counts, [card]: (counts[card] ?? 0) + 1 }), {});
   const used = collectNumbers(tree);
-  if (used.some((card) => !available[card] || --available[card] < 0)) throw new ExpressionError("Solo puedes usar cada carta una vez.");
+  for (const card of used) {
+    if (available[card] === undefined) throw new ExpressionError("Solo puedes usar los números de las cartas.");
+    if (available[card] <= 0) throw new ExpressionError("Solo puedes usar cada carta una vez.");
+    available[card] -= 1;
+  }
   return true;
 }
 
