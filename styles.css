@@ -40,6 +40,10 @@ fieldset input { margin: 0; }
 .keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: .45rem; margin: .75rem 0; }
 .key { min-height: 2.8rem; padding: .4rem; background: #ede9fe; color: #3b1b78; border: 2px solid #c4b5fd; }
 .key:hover { background: #ddd6fe; }
+.round-results { list-style: none; padding: 0; }
+.round-results li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .8rem; margin: .5rem 0; background: #f5f3ff; border-radius: .75rem; }
+.result-value { font-size: 1.5rem; color: #5b21b6; }
+.earned-points { margin-left: auto; min-width: 3rem; font-size: 1.5rem; text-align: right; color: #047857; }
 
 @media (min-width: 48rem) {
   .app { padding: 2rem; }
