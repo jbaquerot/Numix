@@ -62,6 +62,7 @@ const roundView = document.querySelector("#round-view");
 
 const app = createApp((game) => {
   if (!game) return;
+  if (!game.currentRound) return;
   setupView.hidden = true;
   roundView.hidden = false;
   const round = game.currentRound;
