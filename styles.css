@@ -1,6 +1,8 @@
 :root {
   color-scheme: light;
   font-family: system-ui, sans-serif;
+  color: #24213d;
+  background: #f5f3ff;
 }
 
 * {
@@ -11,6 +13,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: linear-gradient(150deg, #fef3ff, #eef5ff);
 }
 
 .app {
@@ -18,3 +21,14 @@ body {
   max-width: 72rem;
   padding: 1rem;
 }
+
+.app-header, section { background: white; border-radius: 1.25rem; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 6px 20px #352e6520; }
+h1 { color: #6d28d9; margin: 0; }
+label, fieldset { display: grid; gap: .4rem; margin: .75rem 0; font-weight: 650; }
+input, textarea, button { font: inherit; padding: .75rem; border-radius: .7rem; border: 2px solid #c4b5fd; }
+textarea { min-height: 5rem; }
+button { background: #7c3aed; color: white; border: 0; font-weight: 700; cursor: pointer; }
+.cards, .scoreboard { display: flex; flex-wrap: wrap; gap: .6rem; padding: 0; list-style: none; }
+.cards li { background: #fbbf24; border-radius: .8rem; font-size: 1.7rem; font-weight: 800; padding: .7rem 1rem; }
+.target, .timer { font-size: 1.3rem; }
+.timer { color: #b45309; font-weight: 800; }
