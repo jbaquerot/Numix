@@ -20,7 +20,7 @@ export function renderSetup(container, onSubmit) {
 export function renderRound(container, game, secondsRemaining) {
   const { currentRound: round, players } = game;
   container.innerHTML = `
-    <h3>Ronda ${round.number} de ${game.settings.totalRounds}</h3>
+    <h2>Ronda ${round.number} de ${game.settings.totalRounds}</h2>
     <p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p>
     <p class="target">Objetivo: <strong>${round.target}</strong></p>
     <ul class="cards" aria-label="Cartas disponibles">${round.cards.map((card) => `<li>${card}</li>`).join("")}</ul>
