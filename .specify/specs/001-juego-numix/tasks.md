@@ -32,17 +32,17 @@
 ## 3. Flujo y experiencia de juego
 
 - [x] T013 Crear la estructura semántica y las regiones accesibles de las vistas de configuración, ronda, resultados y final en `index.html`.
-- [ ] T014 Implementar el estado central de aplicación y la coordinación entre dominio, temporizador y renderizado en `js/app.js`.
-- [ ] T015 Implementar el renderizado de configuración para una o más jugadoras, de 1 a 10 rondas y dificultad fácil, media o difícil en `js/ui.js`.
-- [ ] T016 Implementar el renderizado del reto, cartas, objetivo, temporizador y marcador durante la fase de resolución en `js/ui.js`.
-- [ ] T017 Implementar formularios de introducción de operaciones por jugadora, mensajes de error y resultado inmediato tras una respuesta válida en `js/ui.js`.
-- [ ] T018 Implementar la vista de resultado de ronda, puntos concedidos, marcador acumulado, resultado final y reinicio de partida en `js/ui.js`.
-- [ ] T019 Conectar los eventos de interfaz con las acciones de dominio, incluyendo bloqueo de respuestas ya enviadas y avance de ronda, en `js/app.js` y `js/ui.js`.
+- [x] T014 Implementar el estado central de aplicación y la coordinación entre dominio, temporizador y renderizado en `js/app.js`.
+- [x] T015 Implementar el renderizado de configuración para una o más jugadoras, de 1 a 10 rondas y dificultad fácil, media o difícil en `js/ui.js`.
+- [x] T016 Implementar el renderizado del reto, cartas, objetivo, temporizador y marcador durante la fase de resolución en `js/ui.js`.
+- [x] T017 Implementar formularios de introducción de operaciones por jugadora, mensajes de error y resultado inmediato tras una respuesta válida en `js/ui.js`.
+- [x] T018 Implementar la vista de resultado de ronda, puntos concedidos, marcador acumulado, resultado final y reinicio de partida en `js/ui.js`.
+- [x] T019 Conectar los eventos de interfaz con las acciones de dominio, incluyendo bloqueo de respuestas ya enviadas y avance de ronda, en `js/app.js` y `js/ui.js`.
 
 ## 4. Diseño responsive y accesibilidad
 
-- [ ] T020 Diseñar estilos base mobile-first, tipografía, color, jerarquía visual y estados de interacción adecuados para niñas de 9 a 12 años en `styles.css`.
-- [ ] T021 Añadir diseño adaptable para tablet y portátil, controles táctiles amplios, foco visible, contraste y mensajes de validación accesibles en `styles.css` y `index.html`.
+- [x] T020 Diseñar estilos base mobile-first, tipografía, color, jerarquía visual y estados de interacción adecuados para niñas de 9 a 12 años en `styles.css`.
+- [x] T021 Añadir diseño adaptable para tablet y portátil, controles táctiles amplios, foco visible, contraste y mensajes de validación accesibles en `styles.css` y `index.html`.
 
 ## 5. Verificación y publicación
 
