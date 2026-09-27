@@ -47,7 +47,7 @@
 ## 5. Verificación y publicación
 
 - [x] T022 Ejecutar la suite de pruebas y corregir cualquier fallo en `tests/expression.test.js`, `tests/game.test.js` y los módulos afectados.
-- [ ] T023 Verificar manualmente el flujo completo en vista móvil, tablet y portátil; documentar el resultado en `README.md`.
+- [x] T023 Verificar manualmente el flujo completo en vista móvil, tablet y portátil; documentar el resultado en `README.md`.
 - [ ] T024 Verificar el sitio publicado en GitHub Pages y ajustar rutas relativas de recursos si fuera necesario en `index.html`, `js/app.js` y `README.md`.
 
 ## Orden de ejecución y dependencias
