@@ -95,17 +95,15 @@ function collectNumbers(node, numbers = []) {
   return numbers;
 }
 
-/** Comprueba que el árbol usa cada carta disponible una única vez. */
+/** Comprueba que ninguna carta se use más veces de las disponibles. */
 export function validateCards(tree, cards) {
   if (!Array.isArray(cards) || cards.length !== 4 || !cards.every(Number.isInteger)) {
     throw new ExpressionError("Las cartas de la ronda no son válidas.");
   }
 
-  const used = collectNumbers(tree).sort((a, b) => a - b);
-  const available = [...cards].sort((a, b) => a - b);
-  if (used.length !== available.length || used.some((value, index) => value !== available[index])) {
-    throw new ExpressionError("Usa las cuatro cartas mostradas, cada una una sola vez.");
-  }
+  const available = cards.reduce((counts, card) => ({ ...counts, [card]: (counts[card] ?? 0) + 1 }), {});
+  const used = collectNumbers(tree);
+  if (used.some((card) => !available[card] || --available[card] < 0)) throw new ExpressionError("Solo puedes usar cada carta una vez.");
   return true;
 }
 
