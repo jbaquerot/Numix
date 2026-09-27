@@ -84,3 +84,27 @@ export function parseExpression(source) {
   if (current()) throw new ExpressionError("La operación contiene elementos sin conectar.");
   return tree;
 }
+
+function collectNumbers(node, numbers = []) {
+  if (node.type === "number") {
+    numbers.push(node.value);
+  } else {
+    collectNumbers(node.left, numbers);
+    collectNumbers(node.right, numbers);
+  }
+  return numbers;
+}
+
+/** Comprueba que el árbol usa cada carta disponible una única vez. */
+export function validateCards(tree, cards) {
+  if (!Array.isArray(cards) || cards.length !== 4 || !cards.every(Number.isInteger)) {
+    throw new ExpressionError("Las cartas de la ronda no son válidas.");
+  }
+
+  const used = collectNumbers(tree).sort((a, b) => a - b);
+  const available = [...cards].sort((a, b) => a - b);
+  if (used.length !== available.length || used.some((value, index) => value !== available[index])) {
+    throw new ExpressionError("Usa las cuatro cartas mostradas, cada una una sola vez.");
+  }
+  return true;
+}
