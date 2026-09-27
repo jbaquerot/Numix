@@ -108,3 +108,28 @@ export function validateCards(tree, cards) {
   }
   return true;
 }
+
+/** Evalúa un árbol válido y exige enteros positivos en cada paso. */
+export function evaluateExpression(tree) {
+  if (tree.type === "number") {
+    if (!Number.isInteger(tree.value) || tree.value <= 0) {
+      throw new ExpressionError("Solo se permiten números enteros positivos.");
+    }
+    return tree.value;
+  }
+  const left = evaluateExpression(tree.left);
+  const right = evaluateExpression(tree.right);
+  let result;
+  switch (tree.operator) {
+    case "+": result = left + right; break;
+    case "-": result = left - right; break;
+    case "*": result = left * right; break;
+    case "/":
+      if (right === 0 || left % right !== 0) throw new ExpressionError("La división debe dar un entero positivo.");
+      result = left / right;
+      break;
+    default: throw new ExpressionError("El operador no está permitido.");
+  }
+  if (!Number.isInteger(result) || result <= 0) throw new ExpressionError("Cada resultado debe ser un entero positivo.");
+  return result;
+}
