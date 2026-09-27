@@ -11,9 +11,21 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main id="app" class="app" aria-live="polite">
-      <h1>Numix</h1>
-      <p>Cargando juego…</p>
+    <main id="app" class="app">
+      <header class="app-header"><h1>Numix</h1><p>Operaciones combinadas</p></header>
+      <section id="setup-view" aria-labelledby="setup-title">
+        <h2 id="setup-title">Nueva partida</h2><div id="setup-content"></div>
+      </section>
+      <section id="round-view" hidden aria-labelledby="round-title">
+        <h2 id="round-title">Ronda</h2><div id="round-content"></div>
+      </section>
+      <section id="results-view" hidden aria-labelledby="results-title">
+        <h2 id="results-title">Resultados</h2><div id="results-content"></div>
+      </section>
+      <section id="final-view" hidden aria-labelledby="final-title">
+        <h2 id="final-title">Fin de la partida</h2><div id="final-content"></div>
+      </section>
+      <p id="status-message" role="status" aria-live="polite"></p>
     </main>
     <script type="module" src="./js/app.js"></script>
   </body>
