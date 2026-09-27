@@ -1,6 +1,6 @@
 import { createGame, finishResolving, remainingSeconds, scoreRound, startResolving, startRound } from "./game.js";
 import { evaluateExpression, parseExpression, validateCards } from "./expression.js";
-import { renderAnswerForms, renderRound, renderRoundResults, renderSetup } from "./ui.js";
+import { renderAnswerForms, renderFinalResults, renderRound, renderRoundResults, renderSetup } from "./ui.js";
 
 export function createApp(render) {
   let game = null;
@@ -55,6 +55,11 @@ export function createApp(render) {
       notify();
       return result;
     },
+    restart() {
+      stopTimer();
+      game = null;
+      notify();
+    },
     dispose: stopTimer,
   };
 }
@@ -63,15 +68,27 @@ document.documentElement.dataset.app = "numix";
 
 const setupContainer = document.querySelector("#setup-content");
 const roundContainer = document.querySelector("#round-content");
+const finalContainer = document.querySelector("#final-content");
 const setupView = document.querySelector("#setup-view");
 const roundView = document.querySelector("#round-view");
+const finalView = document.querySelector("#final-view");
 
 const app = createApp((game) => {
-  if (!game) return;
-  if (!game.currentRound) return;
-  setupView.hidden = true;
-  roundView.hidden = false;
+  if (!game?.currentRound) {
+    setupView.hidden = false;
+    roundView.hidden = true;
+    finalView.hidden = true;
+    return;
+  }
   const round = game.currentRound;
+  const isGameOver = round.phase === "results" && round.number === game.settings.totalRounds;
+  setupView.hidden = true;
+  roundView.hidden = isGameOver;
+  finalView.hidden = !isGameOver;
+  if (isGameOver) {
+    renderFinalResults(finalContainer, game.players, () => app.restart());
+    return;
+  }
   renderRound(roundContainer, game, remainingSeconds(round), app.finishRoundEarly);
   if (round.phase === "entering") renderAnswerForms(roundContainer, game, app.submitAnswer);
   if (round.phase === "results") renderRoundResults(roundContainer, round.answers.map((answer) => ({ ...answer, playerName: game.players.find((player) => player.id === answer.playerId).name })), game.players, game.roundHistory, () => app.startRound());

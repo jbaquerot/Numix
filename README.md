@@ -18,6 +18,10 @@ El proyecto está preparado como un sitio estático. Para publicarlo, configura 
 
 No requiere backend, base de datos, cuentas ni variables de entorno.
 
+## Verificación manual
+
+Partida completa (1 jugadora, 5 rondas, dificultades fácil/media) probada en viewport móvil (375×812), tablet (768×1024) y portátil: cartas, objetivo, temporizador, teclado de introducción, resultados de ronda, marcador acumulado y pantalla de fin de partida con reinicio se muestran correctamente y con controles táctiles cómodos en las tres resoluciones.
+
 ## Documentación del proyecto
 
 - [Constitution](.specify/memory/constitution.md)
