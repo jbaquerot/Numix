@@ -28,7 +28,17 @@ label, fieldset { display: grid; gap: .4rem; margin: .75rem 0; font-weight: 650;
 input, textarea, button { font: inherit; padding: .75rem; border-radius: .7rem; border: 2px solid #c4b5fd; }
 textarea { min-height: 5rem; }
 button { background: #7c3aed; color: white; border: 0; font-weight: 700; cursor: pointer; }
+button:hover { background: #6d28d9; }
+button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid #f59e0b; outline-offset: 3px; }
+button:disabled, input:disabled { opacity: .6; cursor: not-allowed; }
 .cards, .scoreboard { display: flex; flex-wrap: wrap; gap: .6rem; padding: 0; list-style: none; }
 .cards li { background: #fbbf24; border-radius: .8rem; font-size: 1.7rem; font-weight: 800; padding: .7rem 1rem; }
 .target, .timer { font-size: 1.3rem; }
 .timer { color: #b45309; font-weight: 800; }
+
+@media (min-width: 48rem) {
+  .app { padding: 2rem; }
+  #setup-form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  #setup-form button, #setup-form fieldset { grid-column: span 2; }
+  .cards li { font-size: 2rem; padding: 1rem 1.4rem; }
+}
