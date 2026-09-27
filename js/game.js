@@ -37,3 +37,15 @@ export function scoreRound(target, answers) {
     points: winners.some((winner) => winner.playerId === answer.playerId) ? (exact.length ? 2 : 1) : 0,
   }));
 }
+
+export function startResolving(round, durationSeconds, now = Date.now()) {
+  return { ...round, phase: ROUND_PHASES.resolving, endsAt: now + durationSeconds * 1000 };
+}
+
+export function remainingSeconds(round, now = Date.now()) {
+  return Math.max(0, Math.ceil((round.endsAt - now) / 1000));
+}
+
+export function finishResolving(round, now = Date.now()) {
+  return remainingSeconds(round, now) === 0 ? { ...round, phase: ROUND_PHASES.entering } : round;
+}
