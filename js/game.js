@@ -26,3 +26,14 @@ export function startRound(game, random = Math.random) {
   if (number > game.settings.totalRounds) throw new Error("La partida ya ha terminado.");
   return { ...game, currentRound: createRound(number, random) };
 }
+
+export function scoreRound(target, answers) {
+  const exact = answers.filter(({ result }) => result === target);
+  const winners = exact.length ? exact : answers.filter(({ result }) =>
+    Math.abs(result - target) === Math.min(...answers.map((answer) => Math.abs(answer.result - target))));
+  return answers.map((answer) => ({
+    ...answer,
+    distance: Math.abs(answer.result - target),
+    points: winners.some((winner) => winner.playerId === answer.playerId) ? (exact.length ? 2 : 1) : 0,
+  }));
+}
