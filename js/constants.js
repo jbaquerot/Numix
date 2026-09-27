@@ -9,3 +9,19 @@ export const GAME_RULES = Object.freeze({
   cardMin: 1,
   cardMax: 10,
 });
+
+export const DIFFICULTIES = Object.freeze({
+  easy: Object.freeze({ label: "Fácil", durationSeconds: 60 }),
+  medium: Object.freeze({ label: "Medio", durationSeconds: 45 }),
+  hard: Object.freeze({ label: "Difícil", durationSeconds: 30 }),
+});
+
+export const ROUND_PHASES = Object.freeze({
+  prepared: "prepared",
+  resolving: "resolving",
+  entering: "entering",
+  results: "results",
+  finished: "finished",
+});
+
+export const OPERATORS = Object.freeze(["+", "-", "*", "/"]);
