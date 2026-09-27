@@ -16,3 +16,13 @@ export function renderSetup(container, onSubmit) {
     onSubmit({ players, totalRounds: Number(data.get("rounds")), difficulty: data.get("difficulty") });
   });
 }
+
+export function renderRound(container, game, secondsRemaining) {
+  const { currentRound: round, players } = game;
+  container.innerHTML = `
+    <p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p>
+    <p class="target">Objetivo: <strong>${round.target}</strong></p>
+    <ul class="cards" aria-label="Cartas disponibles">${round.cards.map((card) => `<li>${card}</li>`).join("")}</ul>
+    <h3>Marcador</h3>
+    <ul class="scoreboard">${players.map((player) => `<li>${player.name}: ${player.score} puntos</li>`).join("")}</ul>`;
+}
