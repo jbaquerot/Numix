@@ -25,7 +25,7 @@ body {
 .app-header, section { background: white; border-radius: 1.25rem; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 6px 20px #352e6520; }
 h1 { color: #6d28d9; margin: 0; }
 label, fieldset { display: grid; gap: .4rem; margin: .75rem 0; font-weight: 650; }
-input, textarea, button { font: inherit; padding: .75rem; border-radius: .7rem; border: 2px solid #c4b5fd; }
+input, select, textarea, button { font: inherit; padding: .75rem; border-radius: .7rem; border: 2px solid #c4b5fd; }
 textarea { min-height: 5rem; }
 button { background: #7c3aed; color: white; border: 0; font-weight: 700; cursor: pointer; }
 button:hover { background: #6d28d9; }
@@ -35,6 +35,11 @@ button:disabled, input:disabled { opacity: .6; cursor: not-allowed; }
 .cards li { background: #fbbf24; border-radius: .8rem; font-size: 1.7rem; font-weight: 800; padding: .7rem 1rem; }
 .target, .timer { font-size: 1.3rem; }
 .timer { color: #b45309; font-weight: 800; }
+fieldset label { display: flex; align-items: center; gap: .5rem; }
+fieldset input { margin: 0; }
+.keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: .45rem; margin: .75rem 0; }
+.key { min-height: 2.8rem; padding: .4rem; background: #ede9fe; color: #3b1b78; border: 2px solid #c4b5fd; }
+.key:hover { background: #ddd6fe; }
 
 @media (min-width: 48rem) {
   .app { padding: 2rem; }
