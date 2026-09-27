@@ -15,7 +15,7 @@
 
 - [x] T001 Crear la estructura base de la aplicación estática en `index.html`, `styles.css`, `js/app.js`, `js/constants.js`, `js/game.js`, `js/expression.js` y `js/ui.js`.
 - [x] T002 Configurar el entorno de pruebas de JavaScript y los scripts de desarrollo en `package.json`.
-- [ ] T003 [P] Documentar la ejecución local, las pruebas y el despliegue en GitHub Pages en `README.md`.
+- [x] T003 [P] Documentar la ejecución local, las pruebas y el despliegue en GitHub Pages en `README.md`.
 
 ## 2. Reglas matemáticas y dominio
 
