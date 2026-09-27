@@ -26,3 +26,24 @@ export function renderRound(container, game, secondsRemaining) {
     <h3>Marcador</h3>
     <ul class="scoreboard">${players.map((player) => `<li>${player.name}: ${player.score} puntos</li>`).join("")}</ul>`;
 }
+
+export function renderAnswerForms(container, game, onAnswer) {
+  container.innerHTML = game.players.map((player) => `
+    <form class="answer-form" data-player-id="${player.id}">
+      <label>${player.name}<input name="expression" inputmode="text" placeholder="(2 + 3) × 4" required></label>
+      <button>Comprobar</button><p class="answer-message" role="status"></p>
+    </form>`).join("");
+  container.querySelectorAll("form").forEach((form) => form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const input = form.elements.expression;
+    const message = form.querySelector(".answer-message");
+    try {
+      const result = onAnswer(form.dataset.playerId, input.value);
+      message.textContent = `Resultado: ${result}`;
+      input.disabled = true;
+      form.querySelector("button").disabled = true;
+    } catch (error) {
+      message.textContent = error.message;
+    }
+  }));
+}
