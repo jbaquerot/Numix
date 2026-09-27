@@ -1,7 +1,8 @@
 /** Reglas y valores compartidos de Numix. */
 export const GAME_RULES = Object.freeze({
   minPlayers: 1,
-  minRounds: 1,
+  maxPlayers: 4,
+  minRounds: 5,
   maxRounds: 10,
   cardsPerRound: 4,
   targetMin: 1,
