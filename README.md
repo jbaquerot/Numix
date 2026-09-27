@@ -22,6 +22,8 @@ No requiere backend, base de datos, cuentas ni variables de entorno.
 
 Partida completa (1 jugadora, 5 rondas, dificultades fácil/media) probada en viewport móvil (375×812), tablet (768×1024) y portátil: cartas, objetivo, temporizador, teclado de introducción, resultados de ronda, marcador acumulado y pantalla de fin de partida con reinicio se muestran correctamente y con controles táctiles cómodos en las tres resoluciones.
 
+Sitio publicado en GitHub Pages verificado en <https://jbaquerot.github.io/Numix/>: los cinco módulos de `js/` cargan con 200 OK mediante sus rutas relativas (`./js/app.js`, etc.), sin errores de consola, y la partida arranca y genera rondas correctamente.
+
 ## Documentación del proyecto
 
 - [Constitution](.specify/memory/constitution.md)
