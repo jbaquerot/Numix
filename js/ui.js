@@ -67,8 +67,8 @@ export function renderAnswerForms(container, game, onAnswer) {
   });
 }
 
-export function renderRoundResults(container, answers, players, history, onNext) {
-  container.innerHTML = `<ul class="round-results">${answers.map((answer) => `<li><span>${answer.playerName}: ${answer.expression} = <strong class="result-value">${answer.result}</strong></span><strong class="earned-points">+${answer.points}</strong></li>`).join("")}</ul><section class="round-scoreboard"><h3>Marcador acumulado</h3><ul>${players.map((player) => `<li><span>${player.name}</span><strong>${player.score}</strong></li>`).join("")}</ul></section><section class="history"><h3>Rondas jugadas</h3>${history.map((round) => `<p>Ronda ${round.number}: objetivo ${round.target}</p>`).join("")}</section><button id="next-round">Siguiente ronda</button>`;
+export function renderRoundResults(container, answers, players, history, onNext, isLastRound = false) {
+  container.innerHTML = `<ul class="round-results">${answers.map((answer) => `<li><span>${answer.playerName}: ${answer.expression} = <strong class="result-value">${answer.result}</strong></span><strong class="earned-points">+${answer.points}</strong></li>`).join("")}</ul><section class="round-scoreboard"><h3>Marcador acumulado</h3><ul>${players.map((player) => `<li><span>${player.name}</span><strong>${player.score}</strong></li>`).join("")}</ul></section><section class="history"><h3>Rondas jugadas</h3>${history.map((round) => `<p>Ronda ${round.number}: objetivo ${round.target}</p>`).join("")}</section><button id="next-round">${isLastRound ? "Ver resultado final" : "Siguiente ronda"}</button>`;
   container.querySelector("button").addEventListener("click", onNext);
 }
 
