@@ -5,7 +5,8 @@ import { renderAnswerForms, renderFinalResults, renderRound, renderRoundResults,
 export function createApp(render) {
   let game = null;
   let timerId = null;
-  const notify = () => render(game);
+  let finalShown = false;
+  const notify = () => render(game, finalShown);
 
   function stopTimer() {
     if (timerId) clearInterval(timerId);
@@ -26,6 +27,7 @@ export function createApp(render) {
     getState: () => game,
     createGame(settings) {
       stopTimer();
+      finalShown = false;
       game = createGame(settings);
       notify();
     },
@@ -55,9 +57,14 @@ export function createApp(render) {
       notify();
       return result;
     },
+    showFinal() {
+      finalShown = true;
+      notify();
+    },
     restart() {
       stopTimer();
       game = null;
+      finalShown = false;
       notify();
     },
     dispose: stopTimer,
@@ -73,7 +80,7 @@ const setupView = document.querySelector("#setup-view");
 const roundView = document.querySelector("#round-view");
 const finalView = document.querySelector("#final-view");
 
-const app = createApp((game) => {
+const app = createApp((game, finalShown) => {
   if (!game?.currentRound) {
     setupView.hidden = false;
     roundView.hidden = true;
@@ -81,7 +88,8 @@ const app = createApp((game) => {
     return;
   }
   const round = game.currentRound;
-  const isGameOver = round.phase === "results" && round.number === game.settings.totalRounds;
+  const isLastRound = round.number === game.settings.totalRounds;
+  const isGameOver = round.phase === "results" && isLastRound && finalShown;
   setupView.hidden = true;
   roundView.hidden = isGameOver;
   finalView.hidden = !isGameOver;
@@ -91,7 +99,7 @@ const app = createApp((game) => {
   }
   renderRound(roundContainer, game, remainingSeconds(round), app.finishRoundEarly);
   if (round.phase === "entering") renderAnswerForms(roundContainer, game, app.submitAnswer);
-  if (round.phase === "results") renderRoundResults(roundContainer, round.answers.map((answer) => ({ ...answer, playerName: game.players.find((player) => player.id === answer.playerId).name })), game.players, game.roundHistory, () => app.startRound());
+  if (round.phase === "results") renderRoundResults(roundContainer, round.answers.map((answer) => ({ ...answer, playerName: game.players.find((player) => player.id === answer.playerId).name })), game.players, game.roundHistory, isLastRound ? () => app.showFinal() : () => app.startRound(), isLastRound);
 });
 
 renderSetup(setupContainer, (settings) => {
