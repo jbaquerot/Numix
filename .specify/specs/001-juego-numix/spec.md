@@ -131,7 +131,7 @@ Como jugadora, quiero poder jugar cómodamente desde un portátil, tablet o móv
 
 ## Revisión y aceptación
 
-- [x] **Claridad:** se definen objetivo, cartas, operaciones permitidas, uso obligatorio de las cuatro cartas, temporizador, puntuación y final de partida.
+- [x] **Claridad:** se definen objetivo, cartas, operaciones permitidas, uso de subconjuntos de cartas sin exceder las disponibles, temporizador, puntuación y final de partida.
 - [x] **Completitud:** se cubren la configuración, el desarrollo de una ronda, la introducción de respuestas, los empates, la puntuación acumulada y una nueva partida.
 - [x] **Comprobabilidad:** todos los requisitos incluyen límites o comportamientos observables, incluidos rangos, tiempos, puntuaciones y validaciones matemáticas.
 - [x] **Valor para la usuaria:** el flujo se alinea con la práctica de operaciones combinadas para niñas de 9 a 12 años mediante retos breves y compartidos.
