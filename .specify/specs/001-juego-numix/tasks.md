@@ -21,19 +21,19 @@
 
 - [x] T004 Definir constantes de reglas, dificultades, duraciones y fases de partida en `js/constants.js`.
 - [x] T005 Implementar tokenización y análisis seguro de operaciones con números, operadores y paréntesis en `js/expression.js`.
-- [x] T006 Implementar la validación de uso exacto de las cuatro cartas —incluyendo valores repetidos— en `js/expression.js`.
+- [x] T006 Implementar la validación de uso de subconjuntos de cartas sin superar las cantidades disponibles —incluyendo valores repetidos— en `js/expression.js`.
 - [x] T007 Implementar la evaluación de operaciones, la precedencia y las restricciones de resultados enteros positivos en `js/expression.js`.
 - [x] T008 [P] Crear pruebas de operaciones válidas, paréntesis, precedencia, cartas repetidas, divisiones no exactas, división por cero y resultados no positivos en `tests/expression.test.js`.
 - [x] T009 Implementar creación de partida, generación de objetivos y cartas, y creación de rondas en `js/game.js`.
 - [x] T010 Implementar cálculo de distancia, puntos y empates exactos o por proximidad en `js/game.js`.
 - [x] T011 Implementar transiciones de fase, control de temporizador basado en marca temporal y cierre de partidas en `js/game.js`.
-- [x] T012 [P] Crear pruebas de rangos aleatorios, puntuación, empates, transiciones y partidas de 1 a 10 rondas en `tests/game.test.js`.
+- [x] T012 [P] Crear pruebas de rangos aleatorios, puntuación, empates, transiciones y partidas de 5 a 10 rondas en `tests/game.test.js`.
 
 ## 3. Flujo y experiencia de juego
 
 - [x] T013 Crear la estructura semántica y las regiones accesibles de las vistas de configuración, ronda, resultados y final en `index.html`.
 - [x] T014 Implementar el estado central de aplicación y la coordinación entre dominio, temporizador y renderizado en `js/app.js`.
-- [x] T015 Implementar el renderizado de configuración para una o más jugadoras, de 1 a 10 rondas y dificultad fácil, media o difícil en `js/ui.js`.
+- [x] T015 Implementar el renderizado de configuración para 1 a 4 jugadoras, de 5 a 10 rondas y dificultad fácil, media o difícil en `js/ui.js`.
 - [x] T016 Implementar el renderizado del reto, cartas, objetivo, temporizador y marcador durante la fase de resolución en `js/ui.js`.
 - [x] T017 Implementar formularios de introducción de operaciones por jugadora, mensajes de error y resultado inmediato tras una respuesta válida en `js/ui.js`.
 - [x] T018 Implementar la vista de resultado de ronda, puntos concedidos, marcador acumulado, resultado final y reinicio de partida en `js/ui.js`.
