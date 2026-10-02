@@ -49,6 +49,10 @@ fieldset input { margin: 0; }
 .round-scoreboard ul { list-style: none; margin: 0; padding: 0; }
 .round-scoreboard li { display: flex; justify-content: space-between; align-items: center; padding: .5rem 0; font-size: 1.2rem; }
 .round-scoreboard strong { font-size: 2rem; color: #fde68a; }
+.answer-form { padding: 1rem; margin: .75rem 0; background: #f5f3ff; border-radius: .75rem; }
+.answer-message { min-height: 1.5rem; margin: .5rem 0 0; font-weight: 700; }
+.answer-message.success { color: #047857; }
+.answer-message.error { color: #b91c1c; }
 
 @media (min-width: 48rem) {
   .app { padding: 2rem; }

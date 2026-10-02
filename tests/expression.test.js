@@ -15,7 +15,11 @@ test("acepta las cuatro cartas, incluso repetidas", () => {
 
 test("permite omitir cartas, pero rechaza repetirlas", () => {
   assert.equal(validateCards(parseExpression("2 + 3 + 4"), [2, 3, 4, 5]), true);
-  assert.throws(() => validateCards(parseExpression("2 + 2 + 3"), [2, 3, 4, 5]), ExpressionError);
+  assert.throws(() => validateCards(parseExpression("2 + 2 + 3"), [2, 3, 4, 5]), /cada carta una vez/);
+});
+
+test("rechaza números que no son ninguna de las cartas", () => {
+  assert.throws(() => validateCards(parseExpression("6"), [2, 3, 4, 5]), /números de las cartas/);
 });
 
 test("rechaza divisiones no exactas y resultados no positivos", () => {

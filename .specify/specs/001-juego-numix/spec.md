@@ -2,7 +2,7 @@
 
 **Funcionalidad:** `001-juego-numix`  
 **Estado:** Listo para revisión  
-**Fecha:** 2026-09-23
+**Fecha:** 2026-09-27
 
 ## Propósito
 
@@ -17,7 +17,7 @@ La partida transcurre íntegramente en una sesión de navegador y no requiere cr
 
 ## Recorrido principal
 
-1. Las participantes abren Numix y crean una partida para una o más jugadoras.
+1. Las participantes abren Numix y crean una partida de 1 a 4 jugadoras.
 2. Antes de cada ronda, el juego muestra un número objetivo aleatorio entre 1 y 100 y cuatro cartas aleatorias con valores entre 1 y 10, iguales para todas las jugadoras.
 3. Cada jugadora resuelve el reto en papel durante el tiempo de la ronda, construyendo una operación combinada con suma, resta, multiplicación y división.
 4. Cuando el tiempo se agota, cada jugadora introduce su operación en Numix.
@@ -34,7 +34,7 @@ Como participante, quiero crear una partida indicando quiénes jugarán para pod
 
 **Criterios de aceptación**
 
-- Se permite iniciar una partida con una o más jugadoras.
+- Se permite iniciar una partida de 1 a 4 jugadoras.
 - La partida identifica a cada jugadora de forma clara durante todas las rondas.
 - La configuración se entiende sin instrucciones externas.
 
@@ -58,7 +58,7 @@ Como jugadora, quiero construir mi operación combinada con las cartas y operaci
 - Al agotarse el tiempo de la ronda, Numix habilita la introducción de las operaciones de las jugadoras.
 - Al introducir una operación válida, Numix muestra inmediatamente su resultado.
 - Se pueden emplear suma, resta, multiplicación y división.
-- La operación usa obligatoriamente las cuatro cartas mostradas, cada una exactamente una vez, aunque dos o más cartas tengan el mismo valor.
+- La operación puede usar cualquier subconjunto de las cuatro cartas mostradas, sin usar ninguna más veces de las disponibles, aunque dos o más cartas tengan el mismo valor.
 - Cada paso de cálculo y el resultado final deben ser enteros positivos.
 - El juego impide validar una operación inválida y explica el problema de forma comprensible.
 - Tras validarla, la jugadora ve su operación y el resultado calculado.
@@ -83,7 +83,7 @@ Como jugadora, quiero saber cuándo termina la partida y quién ha ganado para c
 **Criterios de aceptación**
 
 - La partida termina tras el número de rondas establecido para ella.
-- Las participantes eligen entre 1 y 10 rondas antes de comenzar la partida.
+- Las participantes eligen entre 5 y 10 rondas antes de comenzar la partida.
 - Las participantes eligen, antes de comenzar, la duración de resolución de las rondas mediante tres niveles de dificultad: fácil (60 segundos), medio (45 segundos) y difícil (30 segundos).
 - La pantalla final muestra las puntuaciones acumuladas y la ganadora o ganadoras.
 - Se puede empezar una nueva partida sin recargar la página.
@@ -100,7 +100,7 @@ Como jugadora, quiero poder jugar cómodamente desde un portátil, tablet o móv
 
 ## Requisitos funcionales
 
-- **RF-01:** El sistema debe permitir partidas de una o más jugadoras.
+- **RF-01:** El sistema debe permitir partidas de 1 a 4 jugadoras.
 - **RF-02:** El sistema debe generar, en cada ronda, un objetivo entero aleatorio entre 1 y 100.
 - **RF-03:** El sistema debe generar, en cada ronda, cuatro cartas con valores enteros aleatorios entre 1 y 10.
 - **RF-04:** El sistema debe mostrar a todas las jugadoras exactamente el mismo reto de ronda.
@@ -108,13 +108,13 @@ Como jugadora, quiero poder jugar cómodamente desde un portátil, tablet o móv
 - **RF-06:** Al agotarse el tiempo de una ronda, el sistema debe permitir que cada jugadora introduzca su operación.
 - **RF-06a:** Tras introducir y validar una operación, el sistema debe mostrar inmediatamente el resultado obtenido.
 - **RF-07:** El sistema debe aceptar operaciones combinadas que usen suma, resta, multiplicación y división.
-- **RF-07a:** El sistema debe exigir que una operación válida use las cuatro cartas mostradas, cada una exactamente una vez; puede haber cartas con valores iguales.
+- **RF-07a:** El sistema debe permitir que una operación válida use cualquier subconjunto de las cuatro cartas mostradas, sin usar ninguna más veces de las disponibles; puede haber cartas con valores iguales.
 - **RF-08:** El sistema debe calcular el resultado de cada operación respetando el orden de las operaciones y los paréntesis cuando se utilicen.
 - **RF-09:** El sistema debe rechazar entradas matemáticamente inválidas, incluidas las divisiones entre cero y las que produzcan un resultado intermedio o final igual a cero, negativo o no entero.
 - **RF-10:** El sistema debe asignar 2 puntos a cada jugadora que alcance exactamente el objetivo; si varias lo alcanzan, todas reciben 2 puntos.
 - **RF-11:** Si nadie alcanza el objetivo, el sistema debe asignar 1 punto a cada jugadora con la menor distancia absoluta al objetivo; los empates reciben el mismo punto.
 - **RF-12:** El sistema debe conservar las puntuaciones únicamente durante la sesión de la partida abierta.
-- **RF-13:** El sistema debe permitir elegir entre 1 y 10 rondas antes de comenzar y mostrar el resultado acumulado y la ganadora o ganadoras al terminar las rondas configuradas.
+- **RF-13:** El sistema debe permitir elegir entre 5 y 10 rondas antes de comenzar y mostrar el resultado acumulado y la ganadora o ganadoras al terminar las rondas configuradas.
 - **RF-14:** El sistema debe permitir comenzar una nueva partida desde la pantalla final.
 
 ## Límites del producto
@@ -131,7 +131,7 @@ Como jugadora, quiero poder jugar cómodamente desde un portátil, tablet o móv
 
 ## Revisión y aceptación
 
-- [x] **Claridad:** se definen objetivo, cartas, operaciones permitidas, uso obligatorio de las cuatro cartas, temporizador, puntuación y final de partida.
+- [x] **Claridad:** se definen objetivo, cartas, operaciones permitidas, uso de subconjuntos de cartas sin exceder las disponibles, temporizador, puntuación y final de partida.
 - [x] **Completitud:** se cubren la configuración, el desarrollo de una ronda, la introducción de respuestas, los empates, la puntuación acumulada y una nueva partida.
 - [x] **Comprobabilidad:** todos los requisitos incluyen límites o comportamientos observables, incluidos rangos, tiempos, puntuaciones y validaciones matemáticas.
 - [x] **Valor para la usuaria:** el flujo se alinea con la práctica de operaciones combinadas para niñas de 9 a 12 años mediante retos breves y compartidos.
