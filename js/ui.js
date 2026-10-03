@@ -14,13 +14,20 @@ function renderPlayerFields(count, previous) {
     const name = prior?.name ?? `Jugadora ${index + 1}`;
     const icon = prior?.icon ?? PLAYER_ICONS[index % PLAYER_ICONS.length];
     return `
-      <fieldset class="player-fields" data-index="${index}">
-        <legend>Jugadora ${index + 1}</legend>
-        <label>Nombre <input type="text" name="playerName" value="${escapeHtml(name)}" maxlength="20" required></label>
-        <div class="icon-picker" role="radiogroup" aria-label="Icono de la jugadora ${index + 1}">
+      <div class="player-fields" data-index="${index}">
+        <div class="player-summary">
+          <span class="player-summary-icon" aria-hidden="true">${icon}</span>
+          <strong class="player-summary-name">${escapeHtml(name)}</strong>
+          <button type="button" class="ghost-button edit-name-button">✏️ Nombre</button>
+          <button type="button" class="ghost-button edit-icon-button">🎨 Icono</button>
+        </div>
+        <label class="name-edit" hidden>Nombre
+          <input type="text" name="playerName" value="${escapeHtml(name)}" maxlength="20" required>
+        </label>
+        <div class="icon-picker" hidden role="radiogroup" aria-label="Icono de la jugadora ${index + 1}">
           ${PLAYER_ICONS.map((option) => `<label class="icon-option"><input type="radio" name="playerIcon${index}" value="${option}" ${option === icon ? "checked" : ""}><span aria-hidden="true">${option}</span></label>`).join("")}
         </div>
-      </fieldset>`;
+      </div>`;
   }).join("");
 }
 
@@ -45,6 +52,28 @@ export function renderSetup(container, onSubmit) {
 
     container.querySelector("select[name=playerCount]").addEventListener("change", (event) => {
       render(Number(event.target.value), readPlayerFields());
+    });
+
+    container.querySelectorAll(".player-fields").forEach((field, index) => {
+      const nameEdit = field.querySelector(".name-edit");
+      const nameInput = nameEdit.querySelector("input");
+      const iconPicker = field.querySelector(".icon-picker");
+      const nameDisplay = field.querySelector(".player-summary-name");
+      const iconDisplay = field.querySelector(".player-summary-icon");
+
+      field.querySelector(".edit-name-button").addEventListener("click", () => {
+        nameEdit.hidden = !nameEdit.hidden;
+        if (!nameEdit.hidden) nameInput.focus();
+      });
+      field.querySelector(".edit-icon-button").addEventListener("click", () => {
+        iconPicker.hidden = !iconPicker.hidden;
+      });
+      nameInput.addEventListener("input", () => {
+        nameDisplay.textContent = nameInput.value.trim() || `Jugadora ${index + 1}`;
+      });
+      iconPicker.querySelectorAll("input[type=radio]").forEach((radio) => {
+        radio.addEventListener("change", () => { iconDisplay.textContent = radio.value; });
+      });
     });
 
     container.querySelector("form").addEventListener("submit", (event) => {
