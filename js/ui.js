@@ -1,56 +1,199 @@
-import { DIFFICULTIES } from "./constants.js";
+import { DIFFICULTIES, PLAYER_ICONS } from "./constants.js";
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+}
+
+function playerLabel(player) {
+  return `${player.icon} ${escapeHtml(player.name)}`;
+}
+
+function renderPlayerFields(count, previous) {
+  return Array.from({ length: count }, (_, index) => {
+    const prior = previous[index];
+    const name = prior?.name ?? `Jugadora ${index + 1}`;
+    const icon = prior?.icon ?? PLAYER_ICONS[index % PLAYER_ICONS.length];
+    return `
+      <div class="player-fields" data-index="${index}">
+        <div class="player-summary">
+          <span class="player-summary-icon" aria-hidden="true">${icon}</span>
+          <strong class="player-summary-name">${escapeHtml(name)}</strong>
+          <button type="button" class="ghost-button edit-name-button">✏️ Nombre</button>
+          <button type="button" class="ghost-button edit-icon-button">🎨 Icono</button>
+        </div>
+        <label class="name-edit" hidden>Nombre
+          <input type="text" name="playerName" value="${escapeHtml(name)}" maxlength="20" required>
+        </label>
+        <div class="icon-picker" hidden role="radiogroup" aria-label="Icono de la jugadora ${index + 1}">
+          ${PLAYER_ICONS.map((option) => `<label class="icon-option"><input type="radio" name="playerIcon${index}" value="${option}" ${option === icon ? "checked" : ""}><span aria-hidden="true">${option}</span></label>`).join("")}
+        </div>
+      </div>`;
+  }).join("");
+}
 
 export function renderSetup(container, onSubmit) {
-  container.innerHTML = `
+  function readPlayerFields() {
+    return Array.from(container.querySelectorAll(".player-fields")).map((fieldset, index) => ({
+      name: fieldset.querySelector("input[type=text]").value.trim() || `Jugadora ${index + 1}`,
+      icon: fieldset.querySelector("input[type=radio]:checked")?.value ?? PLAYER_ICONS[0],
+    }));
+  }
+
+  function render(count, previousPlayers) {
+    container.innerHTML = `
     <form id="setup-form">
-      <label>Número de jugadoras <select name="playerCount">${[1, 2, 3, 4].map((value) => `<option value="${value}">${value}</option>`).join("")}</select></label>
+      <label>Número de jugadoras <select name="playerCount">${[1, 2, 3, 4].map((value) => `<option value="${value}" ${value === count ? "selected" : ""}>${value}</option>`).join("")}</select></label>
+      <div id="player-fields">${renderPlayerFields(count, previousPlayers)}</div>
       <label>Rondas <select name="rounds">${[5, 6, 7, 8, 9, 10].map((value) => `<option value="${value}">${value}</option>`).join("")}</select></label>
       <fieldset><legend>Dificultad</legend>${Object.entries(DIFFICULTIES).map(([key, value]) =>
         `<label><input type="radio" name="difficulty" value="${key}" ${key === "medium" ? "checked" : ""}> ${value.label} (${value.durationSeconds} s)</label>`).join("")}</fieldset>
       <button type="submit">Empezar partida</button>
     </form>`;
-  container.querySelector("form").addEventListener("submit", (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const players = Array.from({ length: Number(data.get("playerCount")) }, (_, index) => `Jugadora ${index + 1}`);
-    onSubmit({ players, totalRounds: Number(data.get("rounds")), difficulty: data.get("difficulty") });
-  });
+
+    container.querySelector("select[name=playerCount]").addEventListener("change", (event) => {
+      render(Number(event.target.value), readPlayerFields());
+    });
+
+    container.querySelectorAll(".player-fields").forEach((field, index) => {
+      const nameEdit = field.querySelector(".name-edit");
+      const nameInput = nameEdit.querySelector("input");
+      const iconPicker = field.querySelector(".icon-picker");
+      const nameDisplay = field.querySelector(".player-summary-name");
+      const iconDisplay = field.querySelector(".player-summary-icon");
+
+      field.querySelector(".edit-name-button").addEventListener("click", () => {
+        nameEdit.hidden = !nameEdit.hidden;
+        if (!nameEdit.hidden) nameInput.focus();
+      });
+      field.querySelector(".edit-icon-button").addEventListener("click", () => {
+        iconPicker.hidden = !iconPicker.hidden;
+      });
+      nameInput.addEventListener("input", () => {
+        nameDisplay.textContent = nameInput.value.trim() || `Jugadora ${index + 1}`;
+      });
+      iconPicker.querySelectorAll("input[type=radio]").forEach((radio) => {
+        radio.addEventListener("change", () => { iconDisplay.textContent = radio.value; });
+      });
+    });
+
+    container.querySelector("form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      onSubmit({ players: readPlayerFields(), totalRounds: Number(data.get("rounds")), difficulty: data.get("difficulty") });
+    });
+  }
+
+  render(1, []);
 }
 
-export function renderRound(container, game, secondsRemaining, onReady) {
-  const { currentRound: round, players } = game;
-  container.innerHTML = `
-    <h2>Ronda ${round.number} de ${game.settings.totalRounds}</h2>
-    <p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p><button class="ready-button">Ya lo tengo</button>
-    <p class="target">Objetivo: <strong>${round.target}</strong></p>
-    <ul class="cards" aria-label="Cartas disponibles">${round.cards.map((card) => `<li>${card}</li>`).join("")}</ul>
-    <h3>Marcador</h3>
-    <ul class="scoreboard">${players.map((player) => `<li>${player.name}: ${player.score} puntos</li>`).join("")}</ul>`;
-  container.querySelector(".ready-button").addEventListener("click", onReady);
+const KEYPAD_KEYS = ["1", "2", "3", "+", "-", "4", "5", "6", "*", "/", "7", "8", "9", "(", ")", "0", "enter", "del", "CE"];
+
+const HOURGLASS_TOP_Y0 = 11;
+const HOURGLASS_TOP_Y1 = 53;
+const HOURGLASS_BOTTOM_Y0 = 55;
+const HOURGLASS_BOTTOM_Y1 = 97;
+const HOURGLASS_BULB_HEIGHT = HOURGLASS_TOP_Y1 - HOURGLASS_TOP_Y0;
+const HOURGLASS_TOP_GLASS = "M10,11 Q2,30 32,53 Q62,30 54,11 Z";
+const HOURGLASS_BOTTOM_GLASS = "M32,55 Q2,78 10,97 H54 Q62,78 32,55 Z";
+
+function hourglassMarkup(fraction) {
+  const topHeight = Math.max(0, Math.min(1, fraction)) * HOURGLASS_BULB_HEIGHT;
+  const bottomHeight = HOURGLASS_BULB_HEIGHT - topHeight;
+  return `
+    <svg class="hourglass" viewBox="0 0 64 108" role="img" aria-label="Reloj de arena">
+      <defs>
+        <linearGradient id="hg-wood" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#a5744a" />
+          <stop offset=".55" stop-color="#714423" />
+          <stop offset="1" stop-color="#43260f" />
+        </linearGradient>
+        <linearGradient id="hg-sand" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f8e0a4" />
+          <stop offset="1" stop-color="#c17f1f" />
+        </linearGradient>
+        <clipPath id="hg-top-clip"><path d="${HOURGLASS_TOP_GLASS}" /></clipPath>
+        <clipPath id="hg-bottom-clip"><path d="${HOURGLASS_BOTTOM_GLASS}" /></clipPath>
+      </defs>
+      <rect class="hg-sand" clip-path="url(#hg-top-clip)" x="2" width="60" y="${HOURGLASS_TOP_Y1 - topHeight}" height="${topHeight}"></rect>
+      <rect class="hg-sand" clip-path="url(#hg-bottom-clip)" x="2" width="60" y="${HOURGLASS_BOTTOM_Y1 - bottomHeight}" height="${bottomHeight}"></rect>
+      <path class="hg-glass" d="${HOURGLASS_TOP_GLASS}"></path>
+      <path class="hg-glass" d="${HOURGLASS_BOTTOM_GLASS}"></path>
+      <path class="hg-sheen" d="M11,15 Q5,30 27,49" fill="none"></path>
+      <path class="hg-sheen" d="M27,59 Q5,78 11,93" fill="none"></path>
+      <rect class="hg-post" x="4" y="10" width="4" height="88" rx="1.5"></rect>
+      <rect class="hg-post" x="56" y="10" width="4" height="88" rx="1.5"></rect>
+      <rect class="hg-cap" x="2" y="2" width="60" height="9" rx="4"></rect>
+      <rect class="hg-cap" x="2" y="97" width="60" height="9" rx="4"></rect>
+    </svg>`;
 }
 
-export function renderAnswerForms(container, game, onAnswer) {
-  const { target, cards, answers } = game.currentRound;
-  const keypad = ["1", "2", "3", "+", "-", "4", "5", "6", "*", "/", "7", "8", "9", "(", ")", "0", "enter", "del", "CE"].map((key) => `<button type="button" class="key" data-key="${key}">${key === "/" ? "÷" : key}</button>`).join("");
-  container.innerHTML = `<p class="target">Objetivo: <strong>${target}</strong></p><ul class="cards">${cards.map((card) => `<li>${card}</li>`).join("")}</ul>` + game.players.map((player) => {
-    const answer = answers.find((entry) => entry.playerId === player.id);
-    if (answer) {
-      return `
-    <form class="answer-form" data-player-id="${player.id}">
-      <label>${player.name}<input name="expression" value="${answer.expression}" disabled></label>
+export function updateHourglass(container, fraction) {
+  const clamped = Math.max(0, Math.min(1, fraction));
+  const topHeight = clamped * HOURGLASS_BULB_HEIGHT;
+  const bottomHeight = HOURGLASS_BULB_HEIGHT - topHeight;
+  const [topSand, bottomSand] = container.querySelectorAll(".hg-sand");
+  if (!topSand || !bottomSand) return;
+  topSand.setAttribute("y", HOURGLASS_TOP_Y1 - topHeight);
+  topSand.setAttribute("height", topHeight);
+  bottomSand.setAttribute("y", HOURGLASS_BOTTOM_Y1 - bottomHeight);
+  bottomSand.setAttribute("height", bottomHeight);
+}
+
+function renderPlayerPanel(player, round, timeUp) {
+  const answer = round.answers.find((entry) => entry.playerId === player.id);
+  if (answer) {
+    return `
+    <div class="answer-form" data-player-id="${player.id}">
+      <p class="player-name">${playerLabel(player)}</p>
+      <p class="answer-expression">${escapeHtml(answer.expression)}</p>
       <p class="answer-message success" role="status">Resultado: ${answer.result}</p>
-    </form>`;
-    }
+    </div>`;
+  }
+  if (round.readyPlayerIds.includes(player.id)) {
+    const keypad = KEYPAD_KEYS.map((key) => `<button type="button" class="key" data-key="${key}">${key === "/" ? "÷" : key}</button>`).join("");
     return `
     <form class="answer-form" data-player-id="${player.id}">
-      <label>${player.name}<input name="expression" inputmode="text" placeholder="(2 + 3) × 4" required></label>
+      <label>${playerLabel(player)}<input name="expression" inputmode="text" placeholder="(2 + 3) × 4" required></label>
       <div class="keypad" aria-label="Teclado matemático">${keypad}</div>
       <button>Comprobar</button><p class="answer-message" role="status"></p>
     </form>`;
-  }).join("");
-  container.querySelectorAll(".answer-form").forEach((form) => {
+  }
+  if (timeUp) {
+    return `
+    <div class="answer-form" data-player-id="${player.id}">
+      <p class="player-name">${playerLabel(player)}</p>
+      <p class="missed-message" role="status">⏳ Se acabó el tiempo</p>
+    </div>`;
+  }
+  return `
+    <div class="answer-form" data-player-id="${player.id}">
+      <p class="player-name">${playerLabel(player)}</p>
+      <button type="button" class="ready-button" data-player-id="${player.id}">Ya lo tengo</button>
+    </div>`;
+}
+
+export function renderRound(container, game, secondsRemaining, onReady, onAnswer) {
+  const { currentRound: round, players } = game;
+  const fraction = game.settings.durationSeconds > 0 ? secondsRemaining / game.settings.durationSeconds : 0;
+  container.innerHTML = `
+    <div class="round-head">
+      <h2>Ronda ${round.number} de ${game.settings.totalRounds}</h2>
+      <div class="timer-wrap">
+        <p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p>
+        ${hourglassMarkup(fraction)}
+      </div>
+    </div>
+    <div class="challenge">
+      <p class="target">Objetivo: <strong>${round.target}</strong></p>
+      <ul class="cards" aria-label="Cartas disponibles">${round.cards.map((card) => `<li>${card}</li>`).join("")}</ul>
+    </div>
+    <div class="players-panel">${players.map((player) => renderPlayerPanel(player, round, secondsRemaining === 0)).join("")}</div>`;
+
+  container.querySelectorAll(".ready-button").forEach((button) =>
+    button.addEventListener("click", () => onReady(button.dataset.playerId)));
+
+  container.querySelectorAll("form.answer-form").forEach((form) => {
     const input = form.elements.expression;
-    if (input.disabled) return;
     form.querySelectorAll(".key").forEach((button) => button.addEventListener("click", () => { const key = button.dataset.key; if (key === "del") input.value = input.value.slice(0, -1); else if (key === "CE") input.value = ""; else if (key === "enter") form.requestSubmit(); else input.value += key; input.focus(); }));
     form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -67,14 +210,23 @@ export function renderAnswerForms(container, game, onAnswer) {
   });
 }
 
-export function renderRoundResults(container, answers, players, history, onNext, isLastRound = false) {
-  container.innerHTML = `<ul class="round-results">${answers.map((answer) => `<li><span>${answer.playerName}: ${answer.expression} = <strong class="result-value">${answer.result}</strong></span><strong class="earned-points">+${answer.points}</strong></li>`).join("")}</ul><section class="round-scoreboard"><h3>Marcador acumulado</h3><ul>${players.map((player) => `<li><span>${player.name}</span><strong>${player.score}</strong></li>`).join("")}</ul></section><section class="history"><h3>Rondas jugadas</h3>${history.map((round) => `<p>Ronda ${round.number}: objetivo ${round.target}</p>`).join("")}</section><button id="next-round">${isLastRound ? "Ver resultado final" : "Siguiente ronda"}</button>`;
+export function renderScoreboard(container, players) {
+  const sorted = [...players].sort((a, b) => b.score - a.score);
+  container.innerHTML = `<h2>Marcador</h2><ul class="scoreboard">${sorted.map((player) => `<li><span>${playerLabel(player)}</span><strong>${player.score}</strong></li>`).join("")}</ul>`;
+}
+
+export function renderRoundResults(container, answers, history, onNext, isLastRound = false) {
+  const resultsBody = answers.length
+    ? `<ul class="round-results">${answers.map((answer) => `<li><span>${playerLabel(answer.player)}: ${escapeHtml(answer.expression)} = <strong class="result-value">${answer.result}</strong></span><strong class="earned-points">+${answer.points}</strong></li>`).join("")}</ul>`
+    : `<p class="no-answers">⏳ Nadie pulsó "Ya lo tengo" a tiempo. Ronda sin puntos para nadie.</p>`;
+  container.innerHTML = `${resultsBody}<section class="history"><h3>Rondas jugadas</h3>${history.map((round) => `<p>Ronda ${round.number}: objetivo ${round.target}</p>`).join("")}</section><button id="next-round">${isLastRound ? "Ver resultado final" : "Siguiente ronda"}</button>`;
   container.querySelector("button").addEventListener("click", onNext);
 }
 
 export function renderFinalResults(container, players, onRestart) {
   const bestScore = Math.max(...players.map((player) => player.score));
-  const winners = players.filter((player) => player.score === bestScore).map((player) => player.name).join(", ");
-  container.innerHTML = `<p>¡Ganadora${winners.includes(",") ? "s" : ""}: ${winners}!</p><ul>${players.map((player) => `<li>${player.name}: ${player.score} puntos</li>`).join("")}</ul><button>Jugar de nuevo</button>`;
+  const winners = players.filter((player) => player.score === bestScore).map((player) => playerLabel(player)).join(", ");
+  const sorted = [...players].sort((a, b) => b.score - a.score);
+  container.innerHTML = `<p>¡Ganadora${winners.includes(",") ? "s" : ""}: ${winners}!</p><ul>${sorted.map((player) => `<li>${playerLabel(player)}: ${player.score} puntos</li>`).join("")}</ul><button>Jugar de nuevo</button>`;
   container.querySelector("button").addEventListener("click", onRestart);
 }

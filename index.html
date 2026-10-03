@@ -8,23 +8,36 @@
       content="Numix: practica operaciones combinadas jugando."
     />
     <title>Numix - Operaciones combinadas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Quicksand:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main id="app" class="app">
       <header class="app-header"><h1>Numix - Operaciones combinadas</h1><p>Usa las cartas y operaciones para acercarte al objetivo. ¡Cada carta se usa una sola vez!</p></header>
-      <section id="setup-view" aria-labelledby="setup-title">
-        <h2 id="setup-title">Nueva partida</h2><div id="setup-content"></div>
-      </section>
-      <section id="round-view" hidden aria-label="Ronda actual">
-        <div id="round-content"></div>
-      </section>
-      <section id="results-view" hidden aria-labelledby="results-title">
-        <h2 id="results-title">Resultados</h2><div id="results-content"></div>
-      </section>
-      <section id="final-view" hidden aria-labelledby="final-title">
-        <h2 id="final-title">Fin de la partida</h2><div id="final-content"></div>
-      </section>
+      <div class="game-layout">
+        <div class="game-main">
+          <section id="setup-view" aria-labelledby="setup-title">
+            <h2 id="setup-title">Nueva partida</h2><div id="setup-content"></div>
+          </section>
+          <section id="round-view" hidden aria-label="Ronda actual">
+            <div id="round-content"></div>
+          </section>
+          <section id="results-view" hidden aria-labelledby="results-title">
+            <h2 id="results-title">Resultados</h2><div id="results-content"></div>
+          </section>
+          <section id="final-view" hidden aria-labelledby="final-title">
+            <h2 id="final-title">Fin de la partida</h2><div id="final-content"></div>
+          </section>
+        </div>
+        <aside id="scoreboard-view" hidden aria-label="Marcador">
+          <div id="scoreboard-content"></div>
+        </aside>
+      </div>
       <p id="status-message" role="status" aria-live="polite"></p>
     </main>
     <script type="module" src="./js/app.js"></script>

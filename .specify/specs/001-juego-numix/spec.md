@@ -19,9 +19,9 @@ La partida transcurre íntegramente en una sesión de navegador y no requiere cr
 
 1. Las participantes abren Numix y crean una partida de 1 a 4 jugadoras.
 2. Antes de cada ronda, el juego muestra un número objetivo aleatorio entre 1 y 100 y cuatro cartas aleatorias con valores entre 1 y 10, iguales para todas las jugadoras.
-3. Cada jugadora resuelve el reto en papel durante el tiempo de la ronda, construyendo una operación combinada con suma, resta, multiplicación y división.
-4. Cuando el tiempo se agota, cada jugadora introduce su operación en Numix.
-5. El juego comprueba las operaciones, muestra el valor obtenido y compara la distancia de cada una respecto al objetivo.
+3. Cada jugadora resuelve el reto en papel, construyendo una operación combinada con suma, resta, multiplicación y división. En cuanto termina, pulsa su propio botón para pasar a introducir su operación en Numix, sin esperar a las demás jugadoras; el tiempo de la ronda sigue corriendo para quien no haya terminado.
+4. Cuando el tiempo se agota, cualquier jugadora que no haya pulsado su botón pierde la oportunidad de responder en esa ronda. Si nadie lo pulsó a tiempo, la ronda termina sin puntos para nadie.
+5. El juego comprueba las operaciones de quienes sí respondieron, muestra el valor obtenido y compara la distancia de cada una respecto al objetivo.
 6. Si una jugadora alcanza exactamente el objetivo, recibe 2 puntos. Si ninguna lo alcanza, la jugadora con el resultado más próximo recibe 1 punto.
 7. Tras varias rondas, el juego muestra la puntuación acumulada y declara ganadora a la jugadora con más puntos.
 8. Las participantes pueden iniciar una nueva partida desde el resultado final.
@@ -35,7 +35,8 @@ Como participante, quiero crear una partida indicando quiénes jugarán para pod
 **Criterios de aceptación**
 
 - Se permite iniciar una partida de 1 a 4 jugadoras.
-- La partida identifica a cada jugadora de forma clara durante todas las rondas.
+- Antes de empezar, cada jugadora puede escribir su nombre y elegir un icono relacionado con las matemáticas para identificarse.
+- La partida identifica a cada jugadora, con su nombre e icono, de forma clara durante todas las rondas.
 - La configuración se entiende sin instrucciones externas.
 
 ### HU-02 — Conocer el reto de la ronda
@@ -54,8 +55,9 @@ Como jugadora, quiero construir mi operación combinada con las cartas y operaci
 
 **Criterios de aceptación**
 
-- Durante el tiempo de resolución, cada jugadora anota su operación en papel y Numix no solicita todavía la respuesta digital.
-- Al agotarse el tiempo de la ronda, Numix habilita la introducción de las operaciones de las jugadoras.
+- Durante el tiempo de resolución, cada jugadora anota su operación en papel; Numix no solicita todavía la respuesta digital.
+- Cuando hay más de una jugadora, cada una pulsa su propio botón para pasar a introducir su operación en cuanto esté lista, sin esperar a las demás; el resto sigue viendo el tiempo restante hasta pulsar el suyo o hasta que se agote.
+- Al agotarse el tiempo de la ronda, las jugadoras que no hayan pulsado su botón pierden la oportunidad de introducir una operación en esa ronda.
 - Al introducir una operación válida, Numix muestra inmediatamente su resultado.
 - Se pueden emplear suma, resta, multiplicación y división.
 - La operación puede usar cualquier subconjunto de las cuatro cartas mostradas, sin usar ninguna más veces de las disponibles, aunque dos o más cartas tengan el mismo valor.
@@ -101,12 +103,14 @@ Como jugadora, quiero poder jugar cómodamente desde un portátil, tablet o móv
 ## Requisitos funcionales
 
 - **RF-01:** El sistema debe permitir partidas de 1 a 4 jugadoras.
+- **RF-01a:** El sistema debe permitir, antes de empezar, escribir el nombre de cada jugadora y elegir un icono relacionado con las matemáticas entre un conjunto predefinido; debe mostrar ese nombre e icono junto a la jugadora durante toda la partida.
 - **RF-02:** El sistema debe generar, en cada ronda, un objetivo entero aleatorio entre 1 y 100.
 - **RF-03:** El sistema debe generar, en cada ronda, cuatro cartas con valores enteros aleatorios entre 1 y 10.
 - **RF-04:** El sistema debe mostrar a todas las jugadoras exactamente el mismo reto de ronda.
 - **RF-05:** El sistema debe permitir elegir, antes de iniciar la partida, un nivel de dificultad que determine el tiempo limitado de resolución de cada ronda: fácil (60 segundos), medio (45 segundos) o difícil (30 segundos).
-- **RF-06:** Al agotarse el tiempo de una ronda, el sistema debe permitir que cada jugadora introduzca su operación.
+- **RF-06:** Cuando hay más de una jugadora, el sistema debe ofrecer un botón individual por jugadora para que cada una, de forma independiente, pase a introducir su operación en cuanto esté lista, sin esperar a las demás. Solo una jugadora que haya pulsado su botón puede introducir una operación. Al agotarse el tiempo de la ronda, cualquier jugadora que no haya pulsado su botón pierde la oportunidad de responder en esa ronda; si ninguna lo pulsó a tiempo, la ronda se cierra sin puntos para nadie.
 - **RF-06a:** Tras introducir y validar una operación, el sistema debe mostrar inmediatamente el resultado obtenido.
+- **RF-06b:** El sistema debe mostrar en todo momento, mientras la partida está en curso, un marcador con la puntuación de todas las jugadoras ordenado de mayor a menor puntuación.
 - **RF-07:** El sistema debe aceptar operaciones combinadas que usen suma, resta, multiplicación y división.
 - **RF-07a:** El sistema debe permitir que una operación válida use cualquier subconjunto de las cuatro cartas mostradas, sin usar ninguna más veces de las disponibles; puede haber cartas con valores iguales.
 - **RF-08:** El sistema debe calcular el resultado de cada operación respetando el orden de las operaciones y los paréntesis cuando se utilicen.

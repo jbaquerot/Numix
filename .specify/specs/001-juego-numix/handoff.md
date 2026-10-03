@@ -10,17 +10,20 @@ La aplicación debe funcionar en portátil, tablet y móvil, y desplegarse direc
 
 ## Reglas de juego obligatorias
 
-- La partida admite una o más jugadoras.
-- Antes de empezar se eligen de 1 a 4 jugadoras, de 5 a 10 rondas y una dificultad: fácil (60 s), medio (45 s) o difícil (30 s).
+- La partida admite de 1 a 4 jugadoras.
+- Antes de empezar se eligen de 1 a 4 jugadoras, de 5 a 10 rondas y una dificultad: fácil (60 s), medio (45 s) o difícil (30 s). Para cada jugadora se escribe un nombre y se elige un icono relacionado con las matemáticas de un conjunto predefinido.
 - Cada ronda genera un objetivo entero aleatorio de 1 a 100 y cuatro cartas con valores enteros aleatorios de 1 a 10. Las cartas pueden repetir valores.
 - Todas las jugadoras reciben el mismo objetivo y las mismas cartas.
 - Una operación puede usar cualquier subconjunto de las cartas, sin usar ninguna más veces de las disponibles.
 - Solo se permiten suma, resta, multiplicación, división y paréntesis.
 - Todo resultado intermedio y final debe ser un entero positivo. Por tanto, se rechazan división entre cero, división no exacta, cero, negativos y decimales/fracciones.
-- Durante el temporizador las jugadoras resuelven en papel y pueden pulsar “Ya lo tengo” para detenerlo.
-- Tras terminar el tiempo o pulsar ese botón, cada jugadora introduce una operación con un teclado de dígitos 0–9, operadores, paréntesis, Enter, borrar y limpiar. Las cartas y el objetivo permanecen visibles.
+- Si hay más de una jugadora, cada una tiene su propio botón “Ya lo tengo”; lo pulsa cuando quiere dejar de resolver en papel y pasar a introducir su operación, sin esperar a las demás. El temporizador compartido sigue corriendo para quien no haya pulsado el suyo. Solo las jugadoras que han pulsado su botón pueden introducir una operación; una vez que pulsan, tienen tiempo ilimitado para escribirla.
+- Al agotarse el tiempo, cualquier jugadora que no haya pulsado su botón pierde la oportunidad de responder en esa ronda: ya no puede pulsarlo ni introducir una operación. Si nadie pulsó el botón antes de que acabara el tiempo, la ronda se cierra sin puntos para nadie.
+- La ronda se cierra en cuanto todas las jugadoras que sí pulsaron su botón han enviado una operación válida; no espera a quienes nunca lo pulsaron.
+- Tras pulsar su botón, cada jugadora introduce una operación con un teclado de dígitos 0–9, operadores, paréntesis, Enter, borrar y limpiar. Las cartas y el objetivo permanecen visibles. Una vez enviada, su respuesta queda bloqueada y se compara con las del resto de jugadoras que respondieron.
 - Si una o varias jugadoras alcanzan el objetivo exacto, todas reciben 2 puntos.
-- Si nadie alcanza el objetivo, cada jugadora cuya distancia absoluta sea la menor recibe 1 punto.
+- Si nadie alcanza el objetivo, cada jugadora cuya distancia absoluta sea la menor recibe 1 punto; los empates reparten el mismo punto entre todas las jugadoras empatadas. Las jugadoras que no respondieron esa ronda no reciben puntos.
+- El marcador acumulado se muestra siempre visible a la derecha (o debajo, en móvil), ordenado de mayor a menor puntuación.
 - Al acabar las rondas configuradas, mostrar puntuaciones y ganadora(s), con opción de iniciar una partida nueva.
 - Tras cada ronda, mostrar resultados grandes, puntos alineados a la derecha, marcador acumulado e historial de rondas.
 
@@ -46,7 +49,7 @@ README.md
 - Mantener las reglas de dominio separadas del DOM.
 - `expression.js` debe tokenizar, analizar, validar y evaluar expresiones sin `eval`, `Function` ni ejecución dinámica, comprobando que las cartas usadas no superen las disponibles.
 - `game.js` contiene generación de retos, ciclo de ronda, temporizador basado en una marca temporal, puntuación y desempates.
-- `app.js` mantiene el estado en memoria y orquesta transiciones de fase: `preparada`, `resolviendo`, `introduciendo`, `resultados` y `finalizada`.
+- `app.js` mantiene el estado en memoria y orquesta transiciones de fase: `preparada`, `resolviendo`, `resultados` y `finalizada`. Dentro de `resolviendo`, el progreso de cada jugadora (a la espera, introduciendo o respondida) se rastrea de forma independiente por jugadora, no a nivel de ronda.
 - `ui.js` renderiza las vistas y traduce eventos de interfaz a acciones de dominio.
 - Emplear rutas relativas —por ejemplo, `./js/app.js`— para que GitHub Pages sirva el sitio sin configuración adicional.
 

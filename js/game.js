@@ -11,6 +11,7 @@ export function createRound(number, random = Math.random) {
       randomInteger(GAME_RULES.cardMin, GAME_RULES.cardMax, random)),
     phase: ROUND_PHASES.prepared,
     answers: [],
+    readyPlayerIds: [],
   };
 }
 
@@ -18,7 +19,7 @@ export function createGame({ players, totalRounds, difficulty }) {
   if (!Array.isArray(players) || players.length < GAME_RULES.minPlayers || players.length > GAME_RULES.maxPlayers) throw new Error("Elige entre 1 y 4 jugadoras.");
   if (!Number.isInteger(totalRounds) || totalRounds < GAME_RULES.minRounds || totalRounds > GAME_RULES.maxRounds) throw new Error("Elige entre 5 y 10 rondas.");
   if (!DIFFICULTIES[difficulty]) throw new Error("Elige una dificultad válida.");
-  return { players: players.map((name, index) => ({ id: `p${index + 1}`, name, score: 0 })), settings: { totalRounds, difficulty, durationSeconds: DIFFICULTIES[difficulty].durationSeconds }, currentRound: null };
+  return { players: players.map(({ name, icon }, index) => ({ id: `p${index + 1}`, name, icon, score: 0 })), settings: { totalRounds, difficulty, durationSeconds: DIFFICULTIES[difficulty].durationSeconds }, currentRound: null };
 }
 
 export function startRound(game, random = Math.random) {
@@ -46,6 +47,6 @@ export function remainingSeconds(round, now = Date.now()) {
   return Math.max(0, Math.ceil((round.endsAt - now) / 1000));
 }
 
-export function finishResolving(round, now = Date.now()) {
-  return remainingSeconds(round, now) === 0 ? { ...round, phase: ROUND_PHASES.entering } : round;
+export function markReady(round, playerId) {
+  return round.readyPlayerIds.includes(playerId) ? round : { ...round, readyPlayerIds: [...round.readyPlayerIds, playerId] };
 }

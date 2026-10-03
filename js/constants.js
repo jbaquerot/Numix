@@ -20,9 +20,10 @@ export const DIFFICULTIES = Object.freeze({
 export const ROUND_PHASES = Object.freeze({
   prepared: "prepared",
   resolving: "resolving",
-  entering: "entering",
   results: "results",
   finished: "finished",
 });
 
 export const OPERATORS = Object.freeze(["+", "-", "*", "/"]);
+
+export const PLAYER_ICONS = Object.freeze(["➕", "➖", "✖️", "➗", "🔢", "🧮", "📐", "📏"]);

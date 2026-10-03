@@ -47,17 +47,18 @@ Partida
 └── marcador: puntos acumulados por jugadora
 ```
 
-Las fases de una ronda serán: `preparada`, `resolviendo`, `introduciendo`, `resultados` y `finalizada`. Las transiciones estarán centralizadas para impedir, por ejemplo, introducir respuestas antes de que acabe el temporizador o iniciar una ronda posterior antes de resolver la actual.
+Las fases de una ronda serán: `preparada`, `resolviendo`, `resultados` y `finalizada`. Dentro de `resolviendo`, cada jugadora progresa de forma independiente: a la espera (puede pulsar su propio botón «Ya lo tengo» en cualquier momento mientras quede tiempo), introduciendo su operación (sin límite de tiempo una vez pulsado), o ya respondida. El temporizador compartido sigue corriendo para quien no haya pulsado su botón; al agotarse, quien no lo haya pulsado pierde la oportunidad de responder esa ronda (su botón deja de estar disponible). La ronda cambia a `resultados` en cuanto todas las jugadoras que pulsaron su botón han enviado una operación válida; si ninguna lo pulsó antes de agotarse el tiempo, la ronda se cierra de inmediato sin respuestas ni puntos para nadie. Las transiciones estarán centralizadas para impedir, por ejemplo, iniciar una ronda posterior antes de resolver la actual.
 
 ### Interfaz y renderizado
 
 La interfaz se renderiza desde el estado actual y presenta estas vistas:
 
-1. **Configuración:** nombre o identificador de 1 a 4 jugadoras, número de rondas de 5 a 10 y dificultad: fácil (60 s), medio (45 s) o difícil (30 s).
-2. **Resolución en papel:** objetivo, cuatro cartas, temporizador visible y marcador. No permite introducir respuestas mientras el tiempo está activo.
-3. **Introducción de operaciones:** formulario identificado para cada jugadora. Al enviar una respuesta válida, muestra inmediatamente su resultado; las respuestas ya enviadas no pueden reemplazarse.
-4. **Resultado de ronda:** lista de operaciones, resultados, distancia al objetivo, puntos concedidos y marcador acumulado.
-5. **Resultado final:** clasificación, ganadora o ganadoras y acción para iniciar una partida nueva.
+1. **Configuración:** de 1 a 4 jugadoras, cada una con un nombre editable y un icono relacionado con las matemáticas elegido de un conjunto predefinido; número de rondas de 5 a 10 y dificultad: fácil (60 s), medio (45 s) o difícil (30 s).
+2. **Resolución y respuesta por jugadora:** objetivo, cuatro cartas y temporizador visibles para todas. Cada jugadora tiene su propio botón «Ya lo tengo»; al pulsarlo, su panel pasa a mostrar el formulario de introducción mientras las demás jugadoras siguen resolviendo en papel. Al enviar una respuesta válida, muestra inmediatamente su resultado; las respuestas ya enviadas no pueden reemplazarse.
+3. **Resultado de ronda:** lista de operaciones, resultados, distancia al objetivo y puntos concedidos de la ronda.
+4. **Resultado final:** clasificación, ganadora o ganadoras y acción para iniciar una partida nueva.
+
+El marcador acumulado, ordenado de mayor a menor puntuación, se muestra en un panel persistente visible en todo momento durante la partida (a la derecha en pantallas anchas, debajo del contenido principal en móvil).
 
 El diseño será mobile-first, con controles táctiles grandes, texto legible, contraste suficiente y distribución adaptable mediante CSS Grid/Flexbox y media queries. El HTML aportará estructura semántica, etiquetas y mensajes accesibles; JavaScript gestionará el foco y los avisos de validación.
 
@@ -86,10 +87,10 @@ El diseño será mobile-first, con controles táctiles grandes, texto legible, c
 
 1. `game.js` genera el objetivo y las cuatro cartas.
 2. `app.js` cambia la fase a `resolviendo` e inicia un temporizador con la duración elegida.
-3. Al llegar a cero, cambia a `introduciendo`; `ui.js` presenta los formularios de respuesta.
+3. Cada jugadora pulsa su propio botón «Ya lo tengo» cuando quiere empezar a responder; `ui.js` muestra su formulario de respuesta sin afectar a las demás. Al agotarse el tiempo, quien no haya pulsado su botón deja de poder hacerlo y de poder responder esa ronda.
 4. Cada envío pasa a `expression.js`, que valida y evalúa la operación antes de guardarla.
 5. La interfaz muestra de inmediato el resultado válido de esa jugadora.
-6. Cuando todas hayan introducido una respuesta válida, `game.js` calcula los puntos de la ronda y actualiza el marcador.
+6. En cuanto todas las jugadoras que pulsaron su botón han enviado una respuesta válida, `game.js` calcula los puntos de la ronda —repartiéndolos entre empates, y sin puntos para quien no respondió— y actualiza el marcador. Si nadie pulsó el botón a tiempo, la ronda se cierra de inmediato sin puntos para nadie.
 7. La interfaz muestra el resultado y permite continuar o cerrar la partida si se alcanzó el número de rondas elegido.
 
 ### Evaluación de operaciones
@@ -127,7 +128,7 @@ No requiere compilación ni servidor. El archivo HTML cargará los módulos medi
 
 ```js
 {
-  players: [{ id: 'p1', name: 'Ana', score: 0 }],
+  players: [{ id: 'p1', name: 'Ana', icon: '🔢', score: 0 }],
   settings: { totalRounds: 5, difficulty: 'medium', durationSeconds: 45 },
   currentRound: {
     number: 1,
