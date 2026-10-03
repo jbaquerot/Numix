@@ -11,7 +11,7 @@ La aplicación debe funcionar en portátil, tablet y móvil, y desplegarse direc
 ## Reglas de juego obligatorias
 
 - La partida admite de 1 a 4 jugadoras.
-- Antes de empezar se eligen de 1 a 4 jugadoras, de 5 a 10 rondas y una dificultad: fácil (60 s), medio (45 s) o difícil (30 s).
+- Antes de empezar se eligen de 1 a 4 jugadoras, de 5 a 10 rondas y una dificultad: fácil (60 s), medio (45 s) o difícil (30 s). Para cada jugadora se escribe un nombre y se elige un icono relacionado con las matemáticas de un conjunto predefinido.
 - Cada ronda genera un objetivo entero aleatorio de 1 a 100 y cuatro cartas con valores enteros aleatorios de 1 a 10. Las cartas pueden repetir valores.
 - Todas las jugadoras reciben el mismo objetivo y las mismas cartas.
 - Una operación puede usar cualquier subconjunto de las cartas, sin usar ninguna más veces de las disponibles.

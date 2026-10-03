@@ -53,7 +53,7 @@ Las fases de una ronda serán: `preparada`, `resolviendo`, `resultados` y `final
 
 La interfaz se renderiza desde el estado actual y presenta estas vistas:
 
-1. **Configuración:** nombre o identificador de 1 a 4 jugadoras, número de rondas de 5 a 10 y dificultad: fácil (60 s), medio (45 s) o difícil (30 s).
+1. **Configuración:** de 1 a 4 jugadoras, cada una con un nombre editable y un icono relacionado con las matemáticas elegido de un conjunto predefinido; número de rondas de 5 a 10 y dificultad: fácil (60 s), medio (45 s) o difícil (30 s).
 2. **Resolución y respuesta por jugadora:** objetivo, cuatro cartas y temporizador visibles para todas. Cada jugadora tiene su propio botón «Ya lo tengo»; al pulsarlo, su panel pasa a mostrar el formulario de introducción mientras las demás jugadoras siguen resolviendo en papel. Al enviar una respuesta válida, muestra inmediatamente su resultado; las respuestas ya enviadas no pueden reemplazarse.
 3. **Resultado de ronda:** lista de operaciones, resultados, distancia al objetivo y puntos concedidos de la ronda.
 4. **Resultado final:** clasificación, ganadora o ganadoras y acción para iniciar una partida nueva.
@@ -128,7 +128,7 @@ No requiere compilación ni servidor. El archivo HTML cargará los módulos medi
 
 ```js
 {
-  players: [{ id: 'p1', name: 'Ana', score: 0 }],
+  players: [{ id: 'p1', name: 'Ana', icon: '🔢', score: 0 }],
   settings: { totalRounds: 5, difficulty: 'medium', durationSeconds: 45 },
   currentRound: {
     number: 1,

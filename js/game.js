@@ -19,7 +19,7 @@ export function createGame({ players, totalRounds, difficulty }) {
   if (!Array.isArray(players) || players.length < GAME_RULES.minPlayers || players.length > GAME_RULES.maxPlayers) throw new Error("Elige entre 1 y 4 jugadoras.");
   if (!Number.isInteger(totalRounds) || totalRounds < GAME_RULES.minRounds || totalRounds > GAME_RULES.maxRounds) throw new Error("Elige entre 5 y 10 rondas.");
   if (!DIFFICULTIES[difficulty]) throw new Error("Elige una dificultad válida.");
-  return { players: players.map((name, index) => ({ id: `p${index + 1}`, name, score: 0 })), settings: { totalRounds, difficulty, durationSeconds: DIFFICULTIES[difficulty].durationSeconds }, currentRound: null };
+  return { players: players.map(({ name, icon }, index) => ({ id: `p${index + 1}`, name, icon, score: 0 })), settings: { totalRounds, difficulty, durationSeconds: DIFFICULTIES[difficulty].durationSeconds }, currentRound: null };
 }
 
 export function startRound(game, random = Math.random) {

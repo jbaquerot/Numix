@@ -35,7 +35,8 @@ Como participante, quiero crear una partida indicando quiénes jugarán para pod
 **Criterios de aceptación**
 
 - Se permite iniciar una partida de 1 a 4 jugadoras.
-- La partida identifica a cada jugadora de forma clara durante todas las rondas.
+- Antes de empezar, cada jugadora puede escribir su nombre y elegir un icono relacionado con las matemáticas para identificarse.
+- La partida identifica a cada jugadora, con su nombre e icono, de forma clara durante todas las rondas.
 - La configuración se entiende sin instrucciones externas.
 
 ### HU-02 — Conocer el reto de la ronda
@@ -102,6 +103,7 @@ Como jugadora, quiero poder jugar cómodamente desde un portátil, tablet o móv
 ## Requisitos funcionales
 
 - **RF-01:** El sistema debe permitir partidas de 1 a 4 jugadoras.
+- **RF-01a:** El sistema debe permitir, antes de empezar, escribir el nombre de cada jugadora y elegir un icono relacionado con las matemáticas entre un conjunto predefinido; debe mostrar ese nombre e icono junto a la jugadora durante toda la partida.
 - **RF-02:** El sistema debe generar, en cada ronda, un objetivo entero aleatorio entre 1 y 100.
 - **RF-03:** El sistema debe generar, en cada ronda, cuatro cartas con valores enteros aleatorios entre 1 y 10.
 - **RF-04:** El sistema debe mostrar a todas las jugadoras exactamente el mismo reto de ronda.

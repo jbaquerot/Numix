@@ -22,7 +22,7 @@ const { createApp } = await import("../js/app.js");
 test("last-round results are visible before the final score screen, then restart works", () => {
   const views = [];
   const app = createApp((state, finalShown) => views.push({ state, finalShown }));
-  app.createGame({ players: ["Ana", "Bea"], totalRounds: 5, difficulty: "easy" });
+  app.createGame({ players: [{ name: "Ana", icon: "➕" }, { name: "Bea", icon: "➖" }], totalRounds: 5, difficulty: "easy" });
   for (let round = 1; round <= 5; round++) {
     app.startRound();
     app.markReady("p1");
@@ -59,7 +59,7 @@ test("last-round result view offers the final screen instead of another round", 
     },
   };
   renderRoundResults(container,
-    [{ playerName: "Ana", expression: "2+3", result: 5, points: 2 }],
+    [{ player: { name: "Ana", icon: "➕" }, expression: "2+3", result: 5, points: 2 }],
     [{ number: 5, target: 5 }],
     () => { next += 1; }, true);
   assert.match(container.innerHTML, /Ana: 2\+3 =/);

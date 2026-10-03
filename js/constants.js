@@ -25,3 +25,5 @@ export const ROUND_PHASES = Object.freeze({
 });
 
 export const OPERATORS = Object.freeze(["+", "-", "*", "/"]);
+
+export const PLAYER_ICONS = Object.freeze(["➕", "➖", "✖️", "➗", "🔢", "🧮", "📐", "📏"]);

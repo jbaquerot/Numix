@@ -8,13 +8,17 @@ test("crea retos dentro de los rangos", () => {
   assert.deepEqual(round.cards, [1, 1, 1, 1]);
 });
 
+const player = (name, icon = "➕") => ({ name, icon });
+
 test("admite partidas de cinco a diez rondas y de una a cuatro jugadoras", () => {
-  assert.equal(createGame({ players: ["Ana"], totalRounds: 5, difficulty: "easy" }).settings.totalRounds, 5);
-  assert.equal(createGame({ players: ["Ana"], totalRounds: 10, difficulty: "hard" }).settings.durationSeconds, 30);
-  assert.equal(createGame({ players: ["Ana", "Bea", "Cami", "Dora"], totalRounds: 5, difficulty: "medium" }).players.length, 4);
-  assert.throws(() => createGame({ players: ["Ana"], totalRounds: 4, difficulty: "easy" }), /5 y 10/);
-  assert.throws(() => createGame({ players: ["Ana"], totalRounds: 11, difficulty: "easy" }), /5 y 10/);
-  assert.throws(() => createGame({ players: ["A", "B", "C", "D", "E"], totalRounds: 5, difficulty: "easy" }), /1 y 4/);
+  assert.equal(createGame({ players: [player("Ana")], totalRounds: 5, difficulty: "easy" }).settings.totalRounds, 5);
+  assert.equal(createGame({ players: [player("Ana")], totalRounds: 10, difficulty: "hard" }).settings.durationSeconds, 30);
+  const game = createGame({ players: [player("Ana", "🔢"), player("Bea"), player("Cami"), player("Dora")], totalRounds: 5, difficulty: "medium" });
+  assert.equal(game.players.length, 4);
+  assert.equal(game.players[0].icon, "🔢");
+  assert.throws(() => createGame({ players: [player("Ana")], totalRounds: 4, difficulty: "easy" }), /5 y 10/);
+  assert.throws(() => createGame({ players: [player("Ana")], totalRounds: 11, difficulty: "easy" }), /5 y 10/);
+  assert.throws(() => createGame({ players: ["A", "B", "C", "D", "E"].map((name) => player(name)), totalRounds: 5, difficulty: "easy" }), /1 y 4/);
 });
 
 test("puntúa aciertos y empates", () => {

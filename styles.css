@@ -54,6 +54,13 @@ fieldset input { margin: 0; }
 .scoreboard li:first-child { background: linear-gradient(135deg, #6d28d9, #9333ea); color: white; }
 .scoreboard strong { font-size: 1.3rem; }
 .answer-form { padding: 1rem; margin: 0; background: #f5f3ff; border-radius: .75rem; }
+.player-fields { margin: .75rem 0; padding: 1rem; border-radius: .75rem; border-color: #ddd6fe; }
+.icon-picker { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; }
+.icon-option { display: inline-flex; margin: 0; }
+.icon-option input { position: absolute; opacity: 0; width: 0; height: 0; }
+.icon-option span { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; font-size: 1.4rem; border-radius: .6rem; border: 2px solid #c4b5fd; background: white; cursor: pointer; }
+.icon-option input:checked + span { background: #7c3aed; border-color: #7c3aed; }
+.icon-option input:focus-visible + span { outline: 3px solid #f59e0b; outline-offset: 2px; }
 .answer-message { min-height: 1.5rem; margin: .5rem 0 0; font-weight: 700; }
 .answer-message.success { color: #047857; }
 .answer-message.error { color: #b91c1c; }
@@ -61,7 +68,8 @@ fieldset input { margin: 0; }
 @media (min-width: 48rem) {
   .app { padding: 2rem; }
   #setup-form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-  #setup-form button, #setup-form fieldset { grid-column: span 2; }
+  #setup-form button, #setup-form fieldset, #setup-form #player-fields { grid-column: span 2; }
+  #player-fields { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
   .cards li { width: 5.25rem; min-height: 7rem; font-size: 3rem; }
   .game-layout { grid-template-columns: 1fr 16rem; }
   .players-panel { grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
