@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createGame, createRound, finishResolving, remainingSeconds, scoreRound, startResolving } from "../js/game.js";
+import { createGame, createRound, finishResolving, markReady, remainingSeconds, scoreRound, startResolving } from "../js/game.js";
 
 test("crea retos dentro de los rangos", () => {
   const round = createRound(1, () => 0);
@@ -24,8 +24,17 @@ test("puntúa aciertos y empates", () => {
   assert.deepEqual(near.map(({ points }) => points), [1, 1]);
 });
 
-test("avanza de resolución a introducción cuando termina el tiempo", () => {
+test("al agotar el tiempo, las jugadoras pendientes quedan listas para responder", () => {
   const round = startResolving(createRound(1), 30, 1000);
   assert.equal(remainingSeconds(round, 31000), 0);
-  assert.equal(finishResolving(round, 31000).phase, "entering");
+  const finished = finishResolving(round, ["p1", "p2"], 31000);
+  assert.deepEqual(finished.readyPlayerIds, ["p1", "p2"]);
+  assert.equal(finishResolving(round, [], 15000), round);
+});
+
+test("una jugadora puede marcarse lista en cualquier momento, sin duplicarse", () => {
+  const round = createRound(1);
+  const ready = markReady(round, "p1");
+  assert.deepEqual(ready.readyPlayerIds, ["p1"]);
+  assert.equal(markReady(ready, "p1"), ready);
 });

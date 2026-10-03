@@ -11,6 +11,7 @@ export function createRound(number, random = Math.random) {
       randomInteger(GAME_RULES.cardMin, GAME_RULES.cardMax, random)),
     phase: ROUND_PHASES.prepared,
     answers: [],
+    readyPlayerIds: [],
   };
 }
 
@@ -46,6 +47,12 @@ export function remainingSeconds(round, now = Date.now()) {
   return Math.max(0, Math.ceil((round.endsAt - now) / 1000));
 }
 
-export function finishResolving(round, now = Date.now()) {
-  return remainingSeconds(round, now) === 0 ? { ...round, phase: ROUND_PHASES.entering } : round;
+export function markReady(round, playerId) {
+  return round.readyPlayerIds.includes(playerId) ? round : { ...round, readyPlayerIds: [...round.readyPlayerIds, playerId] };
+}
+
+export function finishResolving(round, pendingPlayerIds, now = Date.now()) {
+  if (remainingSeconds(round, now) > 0) return round;
+  const readyPlayerIds = Array.from(new Set([...round.readyPlayerIds, ...pendingPlayerIds]));
+  return readyPlayerIds.length === round.readyPlayerIds.length ? round : { ...round, readyPlayerIds };
 }

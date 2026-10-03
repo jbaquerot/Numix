@@ -1,8 +1,8 @@
-import { createGame, finishResolving, remainingSeconds, scoreRound, startResolving, startRound } from "./game.js";
+import { createGame, finishResolving, markReady, remainingSeconds, scoreRound, startResolving, startRound } from "./game.js";
 import { evaluateExpression, parseExpression, validateCards } from "./expression.js";
-import { renderAnswerForms, renderFinalResults, renderRound, renderRoundResults, renderSetup } from "./ui.js";
+import { renderFinalResults, renderRound, renderRoundResults, renderScoreboard, renderSetup } from "./ui.js";
 
-export function createApp(render) {
+export function createApp(render, onTimerTick) {
   let game = null;
   let timerId = null;
   let finalShown = false;
@@ -13,14 +13,23 @@ export function createApp(render) {
     timerId = null;
   }
 
+  function pendingPlayerIds() {
+    const round = game.currentRound;
+    return game.players
+      .map((player) => player.id)
+      .filter((id) => !round.readyPlayerIds.includes(id) && !round.answers.some((answer) => answer.playerId === id));
+  }
+
   function tick() {
     if (!game?.currentRound) return;
-    const currentRound = finishResolving(game.currentRound);
+    const currentRound = finishResolving(game.currentRound, pendingPlayerIds());
     if (currentRound !== game.currentRound) {
       game = { ...game, currentRound };
       stopTimer();
+      notify();
+      return;
     }
-    notify();
+    onTimerTick?.(remainingSeconds(game.currentRound));
   }
 
   return {
@@ -38,9 +47,9 @@ export function createApp(render) {
       timerId = setInterval(tick, 250);
       notify();
     },
-    finishRoundEarly() {
-      stopTimer();
-      game = { ...game, currentRound: { ...game.currentRound, phase: "entering" } };
+    markReady(playerId) {
+      game = { ...game, currentRound: markReady(game.currentRound, playerId) };
+      if (pendingPlayerIds().length === 0) stopTimer();
       notify();
     },
     submitAnswer(playerId, source) {
@@ -76,31 +85,58 @@ document.documentElement.dataset.app = "numix";
 const setupContainer = document.querySelector("#setup-content");
 const roundContainer = document.querySelector("#round-content");
 const finalContainer = document.querySelector("#final-content");
+const scoreboardContainer = document.querySelector("#scoreboard-content");
 const setupView = document.querySelector("#setup-view");
 const roundView = document.querySelector("#round-view");
 const finalView = document.querySelector("#final-view");
+const scoreboardView = document.querySelector("#scoreboard-view");
 
-const app = createApp((game, finalShown) => {
-  if (!game?.currentRound) {
-    setupView.hidden = false;
-    roundView.hidden = true;
-    finalView.hidden = true;
-    return;
-  }
-  const round = game.currentRound;
-  const isLastRound = round.number === game.settings.totalRounds;
-  const isGameOver = round.phase === "results" && isLastRound && finalShown;
-  setupView.hidden = true;
-  roundView.hidden = isGameOver;
-  finalView.hidden = !isGameOver;
-  if (isGameOver) {
-    renderFinalResults(finalContainer, game.players, () => app.restart());
-    return;
-  }
-  renderRound(roundContainer, game, remainingSeconds(round), app.finishRoundEarly);
-  if (round.phase === "entering") renderAnswerForms(roundContainer, game, app.submitAnswer);
-  if (round.phase === "results") renderRoundResults(roundContainer, round.answers.map((answer) => ({ ...answer, playerName: game.players.find((player) => player.id === answer.playerId).name })), game.players, game.roundHistory, isLastRound ? () => app.showFinal() : () => app.startRound(), isLastRound);
-});
+function captureDrafts(container) {
+  const drafts = {};
+  container.querySelectorAll("form.answer-form input[name=expression]").forEach((input) => {
+    if (!input.disabled && input.value) drafts[input.closest("form").dataset.playerId] = input.value;
+  });
+  return drafts;
+}
+
+function restoreDrafts(container, drafts) {
+  Object.entries(drafts).forEach(([playerId, value]) => {
+    const input = container.querySelector(`form.answer-form[data-player-id="${playerId}"] input[name=expression]`);
+    if (input) input.value = value;
+  });
+}
+
+const app = createApp(
+  (game, finalShown) => {
+    if (!game?.currentRound) {
+      setupView.hidden = false;
+      roundView.hidden = true;
+      finalView.hidden = true;
+      scoreboardView.hidden = true;
+      return;
+    }
+    const round = game.currentRound;
+    const isLastRound = round.number === game.settings.totalRounds;
+    const isGameOver = round.phase === "results" && isLastRound && finalShown;
+    setupView.hidden = true;
+    roundView.hidden = isGameOver;
+    finalView.hidden = !isGameOver;
+    scoreboardView.hidden = false;
+    renderScoreboard(scoreboardContainer, game.players);
+    if (isGameOver) {
+      renderFinalResults(finalContainer, game.players, () => app.restart());
+      return;
+    }
+    const drafts = captureDrafts(roundContainer);
+    if (round.phase === "resolving") renderRound(roundContainer, game, remainingSeconds(round), app.markReady, app.submitAnswer);
+    if (round.phase === "results") renderRoundResults(roundContainer, round.answers.map((answer) => ({ ...answer, playerName: game.players.find((player) => player.id === answer.playerId).name })), game.roundHistory, isLastRound ? () => app.showFinal() : () => app.startRound(), isLastRound);
+    restoreDrafts(roundContainer, drafts);
+  },
+  (seconds) => {
+    const timerEl = roundContainer.querySelector(".timer");
+    if (timerEl) timerEl.textContent = `${seconds} s`;
+  },
+);
 
 renderSetup(setupContainer, (settings) => {
   app.createGame(settings);

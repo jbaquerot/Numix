@@ -9,6 +9,7 @@ function element(id) {
     hidden: false,
     innerHTML: "",
     querySelector: () => ({ addEventListener() {} }),
+    querySelectorAll: () => [],
   });
   return nodes.get(id);
 }
@@ -24,10 +25,11 @@ test("last-round results are visible before the final score screen, then restart
   app.createGame({ players: ["Ana", "Bea"], totalRounds: 5, difficulty: "easy" });
   for (let round = 1; round <= 5; round++) {
     app.startRound();
-    app.finishRoundEarly();
+    app.markReady("p1");
+    app.markReady("p2");
     const card = app.getState().currentRound.cards[0];
     app.submitAnswer("p1", String(card));
-    assert.equal(app.getState().currentRound.phase, "entering");
+    assert.equal(app.getState().currentRound.phase, "resolving");
     app.submitAnswer("p2", String(card));
     assert.equal(app.getState().currentRound.phase, "results");
     assert.equal(views.at(-1).finalShown, false);
@@ -58,7 +60,7 @@ test("last-round result view offers the final screen instead of another round", 
   };
   renderRoundResults(container,
     [{ playerName: "Ana", expression: "2+3", result: 5, points: 2 }],
-    [{ name: "Ana", score: 2 }], [{ number: 5, target: 5 }],
+    [{ number: 5, target: 5 }],
     () => { next += 1; }, true);
   assert.match(container.innerHTML, /Ana: 2\+3 =/);
   assert.match(container.innerHTML, /\+2/);

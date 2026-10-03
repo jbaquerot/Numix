@@ -17,40 +17,48 @@ export function renderSetup(container, onSubmit) {
   });
 }
 
-export function renderRound(container, game, secondsRemaining, onReady) {
-  const { currentRound: round, players } = game;
-  container.innerHTML = `
-    <h2>Ronda ${round.number} de ${game.settings.totalRounds}</h2>
-    <p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p><button class="ready-button">Ya lo tengo</button>
-    <p class="target">Objetivo: <strong>${round.target}</strong></p>
-    <ul class="cards" aria-label="Cartas disponibles">${round.cards.map((card) => `<li>${card}</li>`).join("")}</ul>
-    <h3>Marcador</h3>
-    <ul class="scoreboard">${players.map((player) => `<li>${player.name}: ${player.score} puntos</li>`).join("")}</ul>`;
-  container.querySelector(".ready-button").addEventListener("click", onReady);
-}
+const KEYPAD_KEYS = ["1", "2", "3", "+", "-", "4", "5", "6", "*", "/", "7", "8", "9", "(", ")", "0", "enter", "del", "CE"];
 
-export function renderAnswerForms(container, game, onAnswer) {
-  const { target, cards, answers } = game.currentRound;
-  const keypad = ["1", "2", "3", "+", "-", "4", "5", "6", "*", "/", "7", "8", "9", "(", ")", "0", "enter", "del", "CE"].map((key) => `<button type="button" class="key" data-key="${key}">${key === "/" ? "÷" : key}</button>`).join("");
-  container.innerHTML = `<p class="target">Objetivo: <strong>${target}</strong></p><ul class="cards">${cards.map((card) => `<li>${card}</li>`).join("")}</ul>` + game.players.map((player) => {
-    const answer = answers.find((entry) => entry.playerId === player.id);
-    if (answer) {
-      return `
-    <form class="answer-form" data-player-id="${player.id}">
-      <label>${player.name}<input name="expression" value="${answer.expression}" disabled></label>
+function renderPlayerPanel(player, round) {
+  const answer = round.answers.find((entry) => entry.playerId === player.id);
+  if (answer) {
+    return `
+    <div class="answer-form" data-player-id="${player.id}">
+      <p class="player-name">${player.name}</p>
+      <p class="answer-expression">${answer.expression}</p>
       <p class="answer-message success" role="status">Resultado: ${answer.result}</p>
-    </form>`;
-    }
+    </div>`;
+  }
+  if (round.readyPlayerIds.includes(player.id)) {
+    const keypad = KEYPAD_KEYS.map((key) => `<button type="button" class="key" data-key="${key}">${key === "/" ? "÷" : key}</button>`).join("");
     return `
     <form class="answer-form" data-player-id="${player.id}">
       <label>${player.name}<input name="expression" inputmode="text" placeholder="(2 + 3) × 4" required></label>
       <div class="keypad" aria-label="Teclado matemático">${keypad}</div>
       <button>Comprobar</button><p class="answer-message" role="status"></p>
     </form>`;
-  }).join("");
-  container.querySelectorAll(".answer-form").forEach((form) => {
+  }
+  return `
+    <div class="answer-form" data-player-id="${player.id}">
+      <p class="player-name">${player.name}</p>
+      <button type="button" class="ready-button" data-player-id="${player.id}">Ya lo tengo</button>
+    </div>`;
+}
+
+export function renderRound(container, game, secondsRemaining, onReady, onAnswer) {
+  const { currentRound: round, players } = game;
+  container.innerHTML = `
+    <h2>Ronda ${round.number} de ${game.settings.totalRounds}</h2>
+    <p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p>
+    <p class="target">Objetivo: <strong>${round.target}</strong></p>
+    <ul class="cards" aria-label="Cartas disponibles">${round.cards.map((card) => `<li>${card}</li>`).join("")}</ul>
+    <div class="players-panel">${players.map((player) => renderPlayerPanel(player, round)).join("")}</div>`;
+
+  container.querySelectorAll(".ready-button").forEach((button) =>
+    button.addEventListener("click", () => onReady(button.dataset.playerId)));
+
+  container.querySelectorAll("form.answer-form").forEach((form) => {
     const input = form.elements.expression;
-    if (input.disabled) return;
     form.querySelectorAll(".key").forEach((button) => button.addEventListener("click", () => { const key = button.dataset.key; if (key === "del") input.value = input.value.slice(0, -1); else if (key === "CE") input.value = ""; else if (key === "enter") form.requestSubmit(); else input.value += key; input.focus(); }));
     form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -67,14 +75,20 @@ export function renderAnswerForms(container, game, onAnswer) {
   });
 }
 
-export function renderRoundResults(container, answers, players, history, onNext, isLastRound = false) {
-  container.innerHTML = `<ul class="round-results">${answers.map((answer) => `<li><span>${answer.playerName}: ${answer.expression} = <strong class="result-value">${answer.result}</strong></span><strong class="earned-points">+${answer.points}</strong></li>`).join("")}</ul><section class="round-scoreboard"><h3>Marcador acumulado</h3><ul>${players.map((player) => `<li><span>${player.name}</span><strong>${player.score}</strong></li>`).join("")}</ul></section><section class="history"><h3>Rondas jugadas</h3>${history.map((round) => `<p>Ronda ${round.number}: objetivo ${round.target}</p>`).join("")}</section><button id="next-round">${isLastRound ? "Ver resultado final" : "Siguiente ronda"}</button>`;
+export function renderScoreboard(container, players) {
+  const sorted = [...players].sort((a, b) => b.score - a.score);
+  container.innerHTML = `<h2>Marcador</h2><ul class="scoreboard">${sorted.map((player) => `<li><span>${player.name}</span><strong>${player.score}</strong></li>`).join("")}</ul>`;
+}
+
+export function renderRoundResults(container, answers, history, onNext, isLastRound = false) {
+  container.innerHTML = `<ul class="round-results">${answers.map((answer) => `<li><span>${answer.playerName}: ${answer.expression} = <strong class="result-value">${answer.result}</strong></span><strong class="earned-points">+${answer.points}</strong></li>`).join("")}</ul><section class="history"><h3>Rondas jugadas</h3>${history.map((round) => `<p>Ronda ${round.number}: objetivo ${round.target}</p>`).join("")}</section><button id="next-round">${isLastRound ? "Ver resultado final" : "Siguiente ronda"}</button>`;
   container.querySelector("button").addEventListener("click", onNext);
 }
 
 export function renderFinalResults(container, players, onRestart) {
   const bestScore = Math.max(...players.map((player) => player.score));
   const winners = players.filter((player) => player.score === bestScore).map((player) => player.name).join(", ");
-  container.innerHTML = `<p>¡Ganadora${winners.includes(",") ? "s" : ""}: ${winners}!</p><ul>${players.map((player) => `<li>${player.name}: ${player.score} puntos</li>`).join("")}</ul><button>Jugar de nuevo</button>`;
+  const sorted = [...players].sort((a, b) => b.score - a.score);
+  container.innerHTML = `<p>¡Ganadora${winners.includes(",") ? "s" : ""}: ${winners}!</p><ul>${sorted.map((player) => `<li>${player.name}: ${player.score} puntos</li>`).join("")}</ul><button>Jugar de nuevo</button>`;
   container.querySelector("button").addEventListener("click", onRestart);
 }

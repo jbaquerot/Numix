@@ -20,7 +20,6 @@ export const DIFFICULTIES = Object.freeze({
 export const ROUND_PHASES = Object.freeze({
   prepared: "prepared",
   resolving: "resolving",
-  entering: "entering",
   results: "results",
   finished: "finished",
 });
