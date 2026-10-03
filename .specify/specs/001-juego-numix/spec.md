@@ -20,8 +20,8 @@ La partida transcurre íntegramente en una sesión de navegador y no requiere cr
 1. Las participantes abren Numix y crean una partida de 1 a 4 jugadoras.
 2. Antes de cada ronda, el juego muestra un número objetivo aleatorio entre 1 y 100 y cuatro cartas aleatorias con valores entre 1 y 10, iguales para todas las jugadoras.
 3. Cada jugadora resuelve el reto en papel, construyendo una operación combinada con suma, resta, multiplicación y división. En cuanto termina, pulsa su propio botón para pasar a introducir su operación en Numix, sin esperar a las demás jugadoras; el tiempo de la ronda sigue corriendo para quien no haya terminado.
-4. Cuando el tiempo se agota, cualquier jugadora que no haya pulsado su botón pasa igualmente a introducir su operación en Numix.
-5. El juego comprueba las operaciones, muestra el valor obtenido y compara la distancia de cada una respecto al objetivo.
+4. Cuando el tiempo se agota, cualquier jugadora que no haya pulsado su botón pierde la oportunidad de responder en esa ronda. Si nadie lo pulsó a tiempo, la ronda termina sin puntos para nadie.
+5. El juego comprueba las operaciones de quienes sí respondieron, muestra el valor obtenido y compara la distancia de cada una respecto al objetivo.
 6. Si una jugadora alcanza exactamente el objetivo, recibe 2 puntos. Si ninguna lo alcanza, la jugadora con el resultado más próximo recibe 1 punto.
 7. Tras varias rondas, el juego muestra la puntuación acumulada y declara ganadora a la jugadora con más puntos.
 8. Las participantes pueden iniciar una nueva partida desde el resultado final.
@@ -57,7 +57,7 @@ Como jugadora, quiero construir mi operación combinada con las cartas y operaci
 
 - Durante el tiempo de resolución, cada jugadora anota su operación en papel; Numix no solicita todavía la respuesta digital.
 - Cuando hay más de una jugadora, cada una pulsa su propio botón para pasar a introducir su operación en cuanto esté lista, sin esperar a las demás; el resto sigue viendo el tiempo restante hasta pulsar el suyo o hasta que se agote.
-- Al agotarse el tiempo de la ronda, Numix habilita la introducción de las operaciones de las jugadoras que aún no la hayan pulsado.
+- Al agotarse el tiempo de la ronda, las jugadoras que no hayan pulsado su botón pierden la oportunidad de introducir una operación en esa ronda.
 - Al introducir una operación válida, Numix muestra inmediatamente su resultado.
 - Se pueden emplear suma, resta, multiplicación y división.
 - La operación puede usar cualquier subconjunto de las cuatro cartas mostradas, sin usar ninguna más veces de las disponibles, aunque dos o más cartas tengan el mismo valor.
@@ -108,7 +108,7 @@ Como jugadora, quiero poder jugar cómodamente desde un portátil, tablet o móv
 - **RF-03:** El sistema debe generar, en cada ronda, cuatro cartas con valores enteros aleatorios entre 1 y 10.
 - **RF-04:** El sistema debe mostrar a todas las jugadoras exactamente el mismo reto de ronda.
 - **RF-05:** El sistema debe permitir elegir, antes de iniciar la partida, un nivel de dificultad que determine el tiempo limitado de resolución de cada ronda: fácil (60 segundos), medio (45 segundos) o difícil (30 segundos).
-- **RF-06:** Cuando hay más de una jugadora, el sistema debe ofrecer un botón individual por jugadora para que cada una, de forma independiente, pase a introducir su operación en cuanto esté lista, sin esperar a las demás. Al agotarse el tiempo de la ronda, el sistema debe permitir igualmente que cualquier jugadora pendiente introduzca su operación.
+- **RF-06:** Cuando hay más de una jugadora, el sistema debe ofrecer un botón individual por jugadora para que cada una, de forma independiente, pase a introducir su operación en cuanto esté lista, sin esperar a las demás. Solo una jugadora que haya pulsado su botón puede introducir una operación. Al agotarse el tiempo de la ronda, cualquier jugadora que no haya pulsado su botón pierde la oportunidad de responder en esa ronda; si ninguna lo pulsó a tiempo, la ronda se cierra sin puntos para nadie.
 - **RF-06a:** Tras introducir y validar una operación, el sistema debe mostrar inmediatamente el resultado obtenido.
 - **RF-06b:** El sistema debe mostrar en todo momento, mientras la partida está en curso, un marcador con la puntuación de todas las jugadoras ordenado de mayor a menor puntuación.
 - **RF-07:** El sistema debe aceptar operaciones combinadas que usen suma, resta, multiplicación y división.

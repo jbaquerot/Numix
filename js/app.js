@@ -1,4 +1,4 @@
-import { createGame, finishResolving, markReady, remainingSeconds, scoreRound, startResolving, startRound } from "./game.js";
+import { createGame, markReady, remainingSeconds, scoreRound, startResolving, startRound } from "./game.js";
 import { evaluateExpression, parseExpression, validateCards } from "./expression.js";
 import { renderFinalResults, renderRound, renderRoundResults, renderScoreboard, renderSetup, updateHourglass } from "./ui.js";
 
@@ -20,16 +20,26 @@ export function createApp(render, onTimerTick) {
       .filter((id) => !round.readyPlayerIds.includes(id) && !round.answers.some((answer) => answer.playerId === id));
   }
 
+  function completeRound(answers) {
+    const scored = scoreRound(game.currentRound.target, answers);
+    const completedRound = { ...game.currentRound, phase: "results", answers: scored };
+    game = {
+      ...game,
+      roundHistory: [...(game.roundHistory ?? []), completedRound],
+      players: game.players.map((player) => ({ ...player, score: player.score + (scored.find((answer) => answer.playerId === player.id)?.points ?? 0) })),
+      currentRound: completedRound,
+    };
+  }
+
   function tick() {
     if (!game?.currentRound) return;
-    const currentRound = finishResolving(game.currentRound, pendingPlayerIds());
-    if (currentRound !== game.currentRound) {
-      game = { ...game, currentRound };
-      stopTimer();
-      notify();
+    if (remainingSeconds(game.currentRound) > 0) {
+      onTimerTick?.(remainingSeconds(game.currentRound), game.settings.durationSeconds);
       return;
     }
-    onTimerTick?.(remainingSeconds(game.currentRound), game.settings.durationSeconds);
+    stopTimer();
+    if (game.currentRound.readyPlayerIds.length === 0) completeRound([]);
+    notify();
   }
 
   return {
@@ -48,6 +58,7 @@ export function createApp(render, onTimerTick) {
       notify();
     },
     markReady(playerId) {
+      if (remainingSeconds(game.currentRound) === 0) return;
       game = { ...game, currentRound: markReady(game.currentRound, playerId) };
       if (pendingPlayerIds().length === 0) stopTimer();
       notify();
@@ -58,11 +69,7 @@ export function createApp(render, onTimerTick) {
       const result = evaluateExpression(tree);
       const answers = [...game.currentRound.answers, { playerId, expression: source, result }];
       game = { ...game, currentRound: { ...game.currentRound, answers } };
-      if (answers.length === game.players.length) {
-        const scored = scoreRound(game.currentRound.target, answers);
-        const completedRound = { ...game.currentRound, phase: "results", answers: scored };
-        game = { ...game, roundHistory: [...(game.roundHistory ?? []), completedRound], players: game.players.map((player) => ({ ...player, score: player.score + (scored.find((answer) => answer.playerId === player.id)?.points ?? 0) })), currentRound: completedRound };
-      }
+      if (answers.length === game.currentRound.readyPlayerIds.length) completeRound(answers);
       notify();
       return result;
     },

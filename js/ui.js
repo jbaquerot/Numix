@@ -93,7 +93,7 @@ export function updateHourglass(container, fraction) {
   bottomSand.setAttribute("height", bottomHeight);
 }
 
-function renderPlayerPanel(player, round) {
+function renderPlayerPanel(player, round, timeUp) {
   const answer = round.answers.find((entry) => entry.playerId === player.id);
   if (answer) {
     return `
@@ -111,6 +111,13 @@ function renderPlayerPanel(player, round) {
       <div class="keypad" aria-label="Teclado matemático">${keypad}</div>
       <button>Comprobar</button><p class="answer-message" role="status"></p>
     </form>`;
+  }
+  if (timeUp) {
+    return `
+    <div class="answer-form" data-player-id="${player.id}">
+      <p class="player-name">${playerLabel(player)}</p>
+      <p class="missed-message" role="status">⏳ Se acabó el tiempo</p>
+    </div>`;
   }
   return `
     <div class="answer-form" data-player-id="${player.id}">
@@ -130,7 +137,7 @@ export function renderRound(container, game, secondsRemaining, onReady, onAnswer
     </div>
     <p class="target">Objetivo: <strong>${round.target}</strong></p>
     <ul class="cards" aria-label="Cartas disponibles">${round.cards.map((card) => `<li>${card}</li>`).join("")}</ul>
-    <div class="players-panel">${players.map((player) => renderPlayerPanel(player, round)).join("")}</div>`;
+    <div class="players-panel">${players.map((player) => renderPlayerPanel(player, round, secondsRemaining === 0)).join("")}</div>`;
 
   container.querySelectorAll(".ready-button").forEach((button) =>
     button.addEventListener("click", () => onReady(button.dataset.playerId)));
@@ -159,7 +166,10 @@ export function renderScoreboard(container, players) {
 }
 
 export function renderRoundResults(container, answers, history, onNext, isLastRound = false) {
-  container.innerHTML = `<ul class="round-results">${answers.map((answer) => `<li><span>${playerLabel(answer.player)}: ${escapeHtml(answer.expression)} = <strong class="result-value">${answer.result}</strong></span><strong class="earned-points">+${answer.points}</strong></li>`).join("")}</ul><section class="history"><h3>Rondas jugadas</h3>${history.map((round) => `<p>Ronda ${round.number}: objetivo ${round.target}</p>`).join("")}</section><button id="next-round">${isLastRound ? "Ver resultado final" : "Siguiente ronda"}</button>`;
+  const resultsBody = answers.length
+    ? `<ul class="round-results">${answers.map((answer) => `<li><span>${playerLabel(answer.player)}: ${escapeHtml(answer.expression)} = <strong class="result-value">${answer.result}</strong></span><strong class="earned-points">+${answer.points}</strong></li>`).join("")}</ul>`
+    : `<p class="no-answers">⏳ Nadie pulsó "Ya lo tengo" a tiempo. Ronda sin puntos para nadie.</p>`;
+  container.innerHTML = `${resultsBody}<section class="history"><h3>Rondas jugadas</h3>${history.map((round) => `<p>Ronda ${round.number}: objetivo ${round.target}</p>`).join("")}</section><button id="next-round">${isLastRound ? "Ver resultado final" : "Siguiente ronda"}</button>`;
   container.querySelector("button").addEventListener("click", onNext);
 }
 

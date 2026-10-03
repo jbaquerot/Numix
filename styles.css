@@ -259,6 +259,8 @@ fieldset input[type="radio"] { margin: 0; }
 .answer-message { min-height: 1.5rem; margin: .5rem 0 0; font-weight: 700; }
 .answer-message.success { color: var(--green); }
 .answer-message.error { color: #c0392b; }
+.missed-message { margin: 0; font-weight: 600; color: #94836a; font-style: italic; }
+.no-answers { font-family: "Caveat", cursive; font-size: 1.5rem; color: #94836a; background: #fdf3df; border: 1px dashed var(--line); border-radius: .7rem; padding: 1rem; margin: .75rem 0; }
 
 @media (min-width: 48rem) {
   .app { padding: 2rem; }

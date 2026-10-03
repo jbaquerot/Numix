@@ -47,7 +47,7 @@ Partida
 └── marcador: puntos acumulados por jugadora
 ```
 
-Las fases de una ronda serán: `preparada`, `resolviendo`, `resultados` y `finalizada`. Dentro de `resolviendo`, cada jugadora progresa de forma independiente: a la espera (puede pulsar su propio botón «Ya lo tengo» en cualquier momento), introduciendo su operación, o ya respondida. El temporizador compartido sigue corriendo para quien no haya pulsado su botón; al agotarse, las jugadoras pendientes pasan a introducir automáticamente. La ronda solo cambia a `resultados` cuando todas las jugadoras han enviado una operación válida. Las transiciones estarán centralizadas para impedir, por ejemplo, iniciar una ronda posterior antes de resolver la actual.
+Las fases de una ronda serán: `preparada`, `resolviendo`, `resultados` y `finalizada`. Dentro de `resolviendo`, cada jugadora progresa de forma independiente: a la espera (puede pulsar su propio botón «Ya lo tengo» en cualquier momento mientras quede tiempo), introduciendo su operación (sin límite de tiempo una vez pulsado), o ya respondida. El temporizador compartido sigue corriendo para quien no haya pulsado su botón; al agotarse, quien no lo haya pulsado pierde la oportunidad de responder esa ronda (su botón deja de estar disponible). La ronda cambia a `resultados` en cuanto todas las jugadoras que pulsaron su botón han enviado una operación válida; si ninguna lo pulsó antes de agotarse el tiempo, la ronda se cierra de inmediato sin respuestas ni puntos para nadie. Las transiciones estarán centralizadas para impedir, por ejemplo, iniciar una ronda posterior antes de resolver la actual.
 
 ### Interfaz y renderizado
 
@@ -87,10 +87,10 @@ El diseño será mobile-first, con controles táctiles grandes, texto legible, c
 
 1. `game.js` genera el objetivo y las cuatro cartas.
 2. `app.js` cambia la fase a `resolviendo` e inicia un temporizador con la duración elegida.
-3. Cada jugadora pulsa su propio botón «Ya lo tengo» cuando quiere empezar a responder; `ui.js` muestra su formulario de respuesta sin afectar a las demás. Al agotarse el tiempo, cualquier jugadora pendiente pasa a responder automáticamente.
+3. Cada jugadora pulsa su propio botón «Ya lo tengo» cuando quiere empezar a responder; `ui.js` muestra su formulario de respuesta sin afectar a las demás. Al agotarse el tiempo, quien no haya pulsado su botón deja de poder hacerlo y de poder responder esa ronda.
 4. Cada envío pasa a `expression.js`, que valida y evalúa la operación antes de guardarla.
 5. La interfaz muestra de inmediato el resultado válido de esa jugadora.
-6. Cuando todas hayan introducido una respuesta válida, `game.js` calcula los puntos de la ronda —repartiéndolos entre empates— y actualiza el marcador.
+6. En cuanto todas las jugadoras que pulsaron su botón han enviado una respuesta válida, `game.js` calcula los puntos de la ronda —repartiéndolos entre empates, y sin puntos para quien no respondió— y actualiza el marcador. Si nadie pulsó el botón a tiempo, la ronda se cierra de inmediato sin puntos para nadie.
 7. La interfaz muestra el resultado y permite continuar o cerrar la partida si se alcanzó el número de rondas elegido.
 
 ### Evaluación de operaciones

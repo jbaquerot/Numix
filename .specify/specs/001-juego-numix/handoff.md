@@ -17,10 +17,12 @@ La aplicación debe funcionar en portátil, tablet y móvil, y desplegarse direc
 - Una operación puede usar cualquier subconjunto de las cartas, sin usar ninguna más veces de las disponibles.
 - Solo se permiten suma, resta, multiplicación, división y paréntesis.
 - Todo resultado intermedio y final debe ser un entero positivo. Por tanto, se rechazan división entre cero, división no exacta, cero, negativos y decimales/fracciones.
-- Si hay más de una jugadora, cada una tiene su propio botón “Ya lo tengo”; lo pulsa cuando quiere dejar de resolver en papel y pasar a introducir su operación, sin esperar a las demás. El temporizador compartido sigue corriendo para quien no haya pulsado el suyo; al agotarse el tiempo, cualquier jugadora pendiente pasa a introducir su operación automáticamente.
-- Tras pulsar su botón (o agotarse el tiempo), cada jugadora introduce una operación con un teclado de dígitos 0–9, operadores, paréntesis, Enter, borrar y limpiar. Las cartas y el objetivo permanecen visibles. Una vez enviada, su respuesta queda bloqueada y se compara con las del resto de jugadoras.
+- Si hay más de una jugadora, cada una tiene su propio botón “Ya lo tengo”; lo pulsa cuando quiere dejar de resolver en papel y pasar a introducir su operación, sin esperar a las demás. El temporizador compartido sigue corriendo para quien no haya pulsado el suyo. Solo las jugadoras que han pulsado su botón pueden introducir una operación; una vez que pulsan, tienen tiempo ilimitado para escribirla.
+- Al agotarse el tiempo, cualquier jugadora que no haya pulsado su botón pierde la oportunidad de responder en esa ronda: ya no puede pulsarlo ni introducir una operación. Si nadie pulsó el botón antes de que acabara el tiempo, la ronda se cierra sin puntos para nadie.
+- La ronda se cierra en cuanto todas las jugadoras que sí pulsaron su botón han enviado una operación válida; no espera a quienes nunca lo pulsaron.
+- Tras pulsar su botón, cada jugadora introduce una operación con un teclado de dígitos 0–9, operadores, paréntesis, Enter, borrar y limpiar. Las cartas y el objetivo permanecen visibles. Una vez enviada, su respuesta queda bloqueada y se compara con las del resto de jugadoras que respondieron.
 - Si una o varias jugadoras alcanzan el objetivo exacto, todas reciben 2 puntos.
-- Si nadie alcanza el objetivo, cada jugadora cuya distancia absoluta sea la menor recibe 1 punto; los empates reparten el mismo punto entre todas las jugadoras empatadas.
+- Si nadie alcanza el objetivo, cada jugadora cuya distancia absoluta sea la menor recibe 1 punto; los empates reparten el mismo punto entre todas las jugadoras empatadas. Las jugadoras que no respondieron esa ronda no reciben puntos.
 - El marcador acumulado se muestra siempre visible a la derecha (o debajo, en móvil), ordenado de mayor a menor puntuación.
 - Al acabar las rondas configuradas, mostrar puntuaciones y ganadora(s), con opción de iniciar una partida nueva.
 - Tras cada ronda, mostrar resultados grandes, puntos alineados a la derecha, marcador acumulado e historial de rondas.

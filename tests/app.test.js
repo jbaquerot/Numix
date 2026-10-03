@@ -44,6 +44,46 @@ test("last-round results are visible before the final score screen, then restart
   app.dispose();
 });
 
+test("the round closes as soon as every ready player has answered, without waiting for a player who never pressed ready", () => {
+  const app = createApp(() => {});
+  app.createGame({ players: [{ name: "Ana", icon: "➕" }, { name: "Bea", icon: "➖" }], totalRounds: 5, difficulty: "easy" });
+  app.startRound();
+  app.markReady("p1");
+  const card = app.getState().currentRound.cards[0];
+  app.submitAnswer("p1", String(card));
+  const round = app.getState().currentRound;
+  assert.equal(round.phase, "results", "p1 was the only ready player, so the round closes once she answers");
+  assert.equal(round.answers.length, 1);
+  assert.equal(app.getState().players.find((player) => player.id === "p2").score, 0, "p2 never readied up and earns no points");
+  app.dispose();
+});
+
+test("if nobody presses ready before time runs out, the round closes with no points for anyone", (t) => {
+  t.mock.timers.enable({ apis: ["setInterval", "Date"] });
+  const views = [];
+  const app = createApp((state, finalShown) => views.push({ state, finalShown }));
+  app.createGame({ players: [{ name: "Ana", icon: "➕" }, { name: "Bea", icon: "➖" }], totalRounds: 5, difficulty: "hard" });
+  app.startRound();
+  t.mock.timers.tick(30000);
+  const round = app.getState().currentRound;
+  assert.equal(round.phase, "results");
+  assert.deepEqual(round.answers, []);
+  assert.equal(app.getState().players[0].score, 0);
+  assert.equal(app.getState().players[1].score, 0);
+  assert.equal(app.getState().roundHistory.length, 1);
+  app.dispose();
+});
+
+test("once time is up, a player who never readied can no longer press the button", (t) => {
+  t.mock.timers.enable({ apis: ["setInterval", "Date"] });
+  const app = createApp(() => {});
+  app.createGame({ players: [{ name: "Ana", icon: "➕" }], totalRounds: 5, difficulty: "hard" });
+  app.startRound();
+  t.mock.timers.tick(30000);
+  assert.equal(app.getState().currentRound.phase, "results", "lone player never readied, round auto-closed");
+  app.dispose();
+});
+
 test("last-round result view offers the final screen instead of another round", async () => {
   const { renderRoundResults } = await import("../js/ui.js");
   let next = 0;

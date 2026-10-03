@@ -50,9 +50,3 @@ export function remainingSeconds(round, now = Date.now()) {
 export function markReady(round, playerId) {
   return round.readyPlayerIds.includes(playerId) ? round : { ...round, readyPlayerIds: [...round.readyPlayerIds, playerId] };
 }
-
-export function finishResolving(round, pendingPlayerIds, now = Date.now()) {
-  if (remainingSeconds(round, now) > 0) return round;
-  const readyPlayerIds = Array.from(new Set([...round.readyPlayerIds, ...pendingPlayerIds]));
-  return readyPlayerIds.length === round.readyPlayerIds.length ? round : { ...round, readyPlayerIds };
-}
