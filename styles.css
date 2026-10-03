@@ -187,8 +187,8 @@ fieldset input[type="radio"] { margin: 0; }
 .cards li:nth-child(even) { transform: rotate(2deg); }
 
 .timer-wrap { display: flex; align-items: center; gap: .5rem; margin: 0; }
-.timer { font-family: "Caveat", cursive; font-size: 1.6rem; color: var(--pink); font-weight: 700; margin: 0; }
-.hourglass { width: 1.9rem; height: 3.1rem; flex-shrink: 0; }
+.timer { font-family: "Caveat", cursive; font-size: 2.1rem; color: var(--pink); font-weight: 700; margin: 0; }
+.hourglass { width: 2.4rem; height: 3.9rem; flex-shrink: 0; }
 .hg-frame { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; }
 .hg-cap { fill: var(--ink); }
 .hg-sand { fill: #dba53c; transition: y .3s linear, height .3s linear; }
