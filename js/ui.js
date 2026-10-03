@@ -125,8 +125,8 @@ export function renderRound(container, game, secondsRemaining, onReady, onAnswer
   container.innerHTML = `
     <h2>Ronda ${round.number} de ${game.settings.totalRounds}</h2>
     <div class="timer-wrap">
-      ${hourglassMarkup(fraction)}
       <p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p>
+      ${hourglassMarkup(fraction)}
     </div>
     <p class="target">Objetivo: <strong>${round.target}</strong></p>
     <ul class="cards" aria-label="Cartas disponibles">${round.cards.map((card) => `<li>${card}</li>`).join("")}</ul>
