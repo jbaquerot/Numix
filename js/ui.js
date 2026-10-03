@@ -59,6 +59,40 @@ export function renderSetup(container, onSubmit) {
 
 const KEYPAD_KEYS = ["1", "2", "3", "+", "-", "4", "5", "6", "*", "/", "7", "8", "9", "(", ")", "0", "enter", "del", "CE"];
 
+const HOURGLASS_TOP_Y0 = 8;
+const HOURGLASS_TOP_Y1 = 50;
+const HOURGLASS_BOTTOM_Y0 = 54;
+const HOURGLASS_BOTTOM_Y1 = 96;
+const HOURGLASS_BULB_HEIGHT = HOURGLASS_TOP_Y1 - HOURGLASS_TOP_Y0;
+
+function hourglassMarkup(fraction) {
+  const topHeight = Math.max(0, Math.min(1, fraction)) * HOURGLASS_BULB_HEIGHT;
+  const bottomHeight = HOURGLASS_BULB_HEIGHT - topHeight;
+  return `
+    <svg class="hourglass" viewBox="0 0 64 104" role="img" aria-label="Reloj de arena">
+      <clipPath id="hg-top-clip"><polygon points="8,8 56,8 32,50"></polygon></clipPath>
+      <clipPath id="hg-bottom-clip"><polygon points="32,54 56,96 8,96"></polygon></clipPath>
+      <rect class="hg-cap" x="2" y="2" width="60" height="6" rx="3"></rect>
+      <rect class="hg-cap" x="2" y="96" width="60" height="6" rx="3"></rect>
+      <path class="hg-frame" d="M8,8 H56 L32,50 Z"></path>
+      <path class="hg-frame" d="M8,96 H56 L32,54 Z"></path>
+      <rect class="hg-sand" clip-path="url(#hg-top-clip)" x="8" width="48" y="${HOURGLASS_TOP_Y1 - topHeight}" height="${topHeight}"></rect>
+      <rect class="hg-sand" clip-path="url(#hg-bottom-clip)" x="8" width="48" y="${HOURGLASS_BOTTOM_Y1 - bottomHeight}" height="${bottomHeight}"></rect>
+    </svg>`;
+}
+
+export function updateHourglass(container, fraction) {
+  const clamped = Math.max(0, Math.min(1, fraction));
+  const topHeight = clamped * HOURGLASS_BULB_HEIGHT;
+  const bottomHeight = HOURGLASS_BULB_HEIGHT - topHeight;
+  const [topSand, bottomSand] = container.querySelectorAll(".hg-sand");
+  if (!topSand || !bottomSand) return;
+  topSand.setAttribute("y", HOURGLASS_TOP_Y1 - topHeight);
+  topSand.setAttribute("height", topHeight);
+  bottomSand.setAttribute("y", HOURGLASS_BOTTOM_Y1 - bottomHeight);
+  bottomSand.setAttribute("height", bottomHeight);
+}
+
 function renderPlayerPanel(player, round) {
   const answer = round.answers.find((entry) => entry.playerId === player.id);
   if (answer) {
@@ -87,9 +121,13 @@ function renderPlayerPanel(player, round) {
 
 export function renderRound(container, game, secondsRemaining, onReady, onAnswer) {
   const { currentRound: round, players } = game;
+  const fraction = game.settings.durationSeconds > 0 ? secondsRemaining / game.settings.durationSeconds : 0;
   container.innerHTML = `
     <h2>Ronda ${round.number} de ${game.settings.totalRounds}</h2>
-    <p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p>
+    <div class="timer-wrap">
+      ${hourglassMarkup(fraction)}
+      <p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p>
+    </div>
     <p class="target">Objetivo: <strong>${round.target}</strong></p>
     <ul class="cards" aria-label="Cartas disponibles">${round.cards.map((card) => `<li>${card}</li>`).join("")}</ul>
     <div class="players-panel">${players.map((player) => renderPlayerPanel(player, round)).join("")}</div>`;

@@ -1,6 +1,6 @@
 import { createGame, finishResolving, markReady, remainingSeconds, scoreRound, startResolving, startRound } from "./game.js";
 import { evaluateExpression, parseExpression, validateCards } from "./expression.js";
-import { renderFinalResults, renderRound, renderRoundResults, renderScoreboard, renderSetup } from "./ui.js";
+import { renderFinalResults, renderRound, renderRoundResults, renderScoreboard, renderSetup, updateHourglass } from "./ui.js";
 
 export function createApp(render, onTimerTick) {
   let game = null;
@@ -29,7 +29,7 @@ export function createApp(render, onTimerTick) {
       notify();
       return;
     }
-    onTimerTick?.(remainingSeconds(game.currentRound));
+    onTimerTick?.(remainingSeconds(game.currentRound), game.settings.durationSeconds);
   }
 
   return {
@@ -132,9 +132,10 @@ const app = createApp(
     if (round.phase === "results") renderRoundResults(roundContainer, round.answers.map((answer) => ({ ...answer, player: game.players.find((player) => player.id === answer.playerId) })), game.roundHistory, isLastRound ? () => app.showFinal() : () => app.startRound(), isLastRound);
     restoreDrafts(roundContainer, drafts);
   },
-  (seconds) => {
+  (seconds, durationSeconds) => {
     const timerEl = roundContainer.querySelector(".timer");
     if (timerEl) timerEl.textContent = `${seconds} s`;
+    updateHourglass(roundContainer, durationSeconds > 0 ? seconds / durationSeconds : 0);
   },
 );
 

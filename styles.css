@@ -182,7 +182,15 @@ fieldset input[type="radio"] { margin: 0; }
 .cards li:nth-child(even) { transform: rotate(2deg); }
 
 .target { font-size: 1.2rem; }
-.timer { font-family: "Caveat", cursive; font-size: 1.9rem; color: var(--pink); font-weight: 700; }
+.timer-wrap { display: flex; align-items: center; gap: .7rem; margin: .3rem 0 .9rem; }
+.timer { font-family: "Caveat", cursive; font-size: 1.9rem; color: var(--pink); font-weight: 700; margin: 0; }
+.hourglass { width: 2.4rem; height: 3.9rem; flex-shrink: 0; }
+.hg-frame { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; }
+.hg-cap { fill: var(--ink); }
+.hg-sand { fill: #dba53c; transition: y .3s linear, height .3s linear; }
+@media (prefers-reduced-motion: reduce) {
+  .hg-sand { transition: none; }
+}
 
 .keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: .45rem; margin: .75rem 0; }
 .key {
