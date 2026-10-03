@@ -88,25 +88,42 @@ export function renderSetup(container, onSubmit) {
 
 const KEYPAD_KEYS = ["1", "2", "3", "+", "-", "4", "5", "6", "*", "/", "7", "8", "9", "(", ")", "0", "enter", "del", "CE"];
 
-const HOURGLASS_TOP_Y0 = 8;
-const HOURGLASS_TOP_Y1 = 50;
-const HOURGLASS_BOTTOM_Y0 = 54;
-const HOURGLASS_BOTTOM_Y1 = 96;
+const HOURGLASS_TOP_Y0 = 11;
+const HOURGLASS_TOP_Y1 = 53;
+const HOURGLASS_BOTTOM_Y0 = 55;
+const HOURGLASS_BOTTOM_Y1 = 97;
 const HOURGLASS_BULB_HEIGHT = HOURGLASS_TOP_Y1 - HOURGLASS_TOP_Y0;
+const HOURGLASS_TOP_GLASS = "M10,11 Q2,30 32,53 Q62,30 54,11 Z";
+const HOURGLASS_BOTTOM_GLASS = "M32,55 Q2,78 10,97 H54 Q62,78 32,55 Z";
 
 function hourglassMarkup(fraction) {
   const topHeight = Math.max(0, Math.min(1, fraction)) * HOURGLASS_BULB_HEIGHT;
   const bottomHeight = HOURGLASS_BULB_HEIGHT - topHeight;
   return `
-    <svg class="hourglass" viewBox="0 0 64 104" role="img" aria-label="Reloj de arena">
-      <clipPath id="hg-top-clip"><polygon points="8,8 56,8 32,50"></polygon></clipPath>
-      <clipPath id="hg-bottom-clip"><polygon points="32,54 56,96 8,96"></polygon></clipPath>
-      <rect class="hg-cap" x="2" y="2" width="60" height="6" rx="3"></rect>
-      <rect class="hg-cap" x="2" y="96" width="60" height="6" rx="3"></rect>
-      <path class="hg-frame" d="M8,8 H56 L32,50 Z"></path>
-      <path class="hg-frame" d="M8,96 H56 L32,54 Z"></path>
-      <rect class="hg-sand" clip-path="url(#hg-top-clip)" x="8" width="48" y="${HOURGLASS_TOP_Y1 - topHeight}" height="${topHeight}"></rect>
-      <rect class="hg-sand" clip-path="url(#hg-bottom-clip)" x="8" width="48" y="${HOURGLASS_BOTTOM_Y1 - bottomHeight}" height="${bottomHeight}"></rect>
+    <svg class="hourglass" viewBox="0 0 64 108" role="img" aria-label="Reloj de arena">
+      <defs>
+        <linearGradient id="hg-wood" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#a5744a" />
+          <stop offset=".55" stop-color="#714423" />
+          <stop offset="1" stop-color="#43260f" />
+        </linearGradient>
+        <linearGradient id="hg-sand" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f8e0a4" />
+          <stop offset="1" stop-color="#c17f1f" />
+        </linearGradient>
+        <clipPath id="hg-top-clip"><path d="${HOURGLASS_TOP_GLASS}" /></clipPath>
+        <clipPath id="hg-bottom-clip"><path d="${HOURGLASS_BOTTOM_GLASS}" /></clipPath>
+      </defs>
+      <rect class="hg-sand" clip-path="url(#hg-top-clip)" x="2" width="60" y="${HOURGLASS_TOP_Y1 - topHeight}" height="${topHeight}"></rect>
+      <rect class="hg-sand" clip-path="url(#hg-bottom-clip)" x="2" width="60" y="${HOURGLASS_BOTTOM_Y1 - bottomHeight}" height="${bottomHeight}"></rect>
+      <path class="hg-glass" d="${HOURGLASS_TOP_GLASS}"></path>
+      <path class="hg-glass" d="${HOURGLASS_BOTTOM_GLASS}"></path>
+      <path class="hg-sheen" d="M11,15 Q5,30 27,49" fill="none"></path>
+      <path class="hg-sheen" d="M27,59 Q5,78 11,93" fill="none"></path>
+      <rect class="hg-post" x="4" y="10" width="4" height="88" rx="1.5"></rect>
+      <rect class="hg-post" x="56" y="10" width="4" height="88" rx="1.5"></rect>
+      <rect class="hg-cap" x="2" y="2" width="60" height="9" rx="4"></rect>
+      <rect class="hg-cap" x="2" y="97" width="60" height="9" rx="4"></rect>
     </svg>`;
 }
 
