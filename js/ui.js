@@ -159,13 +159,17 @@ export function renderRound(container, game, secondsRemaining, onReady, onAnswer
   const { currentRound: round, players } = game;
   const fraction = game.settings.durationSeconds > 0 ? secondsRemaining / game.settings.durationSeconds : 0;
   container.innerHTML = `
-    <h2>Ronda ${round.number} de ${game.settings.totalRounds}</h2>
-    <div class="timer-wrap">
-      <p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p>
-      ${hourglassMarkup(fraction)}
+    <div class="round-head">
+      <h2>Ronda ${round.number} de ${game.settings.totalRounds}</h2>
+      <div class="timer-wrap">
+        <p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p>
+        ${hourglassMarkup(fraction)}
+      </div>
     </div>
-    <p class="target">Objetivo: <strong>${round.target}</strong></p>
-    <ul class="cards" aria-label="Cartas disponibles">${round.cards.map((card) => `<li>${card}</li>`).join("")}</ul>
+    <div class="challenge">
+      <p class="target">Objetivo: <strong>${round.target}</strong></p>
+      <ul class="cards" aria-label="Cartas disponibles">${round.cards.map((card) => `<li>${card}</li>`).join("")}</ul>
+    </div>
     <div class="players-panel">${players.map((player) => renderPlayerPanel(player, round, secondsRemaining === 0)).join("")}</div>`;
 
   container.querySelectorAll(".ready-button").forEach((button) =>
