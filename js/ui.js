@@ -104,13 +104,13 @@ function hourglassMarkup(fraction) {
     <svg class="hourglass" viewBox="0 0 64 108" role="img" aria-label="Reloj de arena">
       <defs>
         <linearGradient id="hg-wood" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#a5744a" />
-          <stop offset=".55" stop-color="#714423" />
-          <stop offset="1" stop-color="#43260f" />
+          <stop offset="0" stop-color="#c7d2fe" />
+          <stop offset=".55" stop-color="#818cf8" />
+          <stop offset="1" stop-color="#3730a3" />
         </linearGradient>
         <linearGradient id="hg-sand" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#f8e0a4" />
-          <stop offset="1" stop-color="#c17f1f" />
+          <stop offset="0" stop-color="#67e8f9" />
+          <stop offset="1" stop-color="#0e7490" />
         </linearGradient>
         <clipPath id="hg-top-clip"><path d="${HOURGLASS_TOP_GLASS}" /></clipPath>
         <clipPath id="hg-bottom-clip"><path d="${HOURGLASS_BOTTOM_GLASS}" /></clipPath>
@@ -151,7 +151,10 @@ function renderPlayerPanel(player, round, timeUp) {
     </div>`;
   }
   if (round.readyPlayerIds.includes(player.id)) {
-    const keypad = KEYPAD_KEYS.map((key) => `<button type="button" class="key" data-key="${key}">${key === "/" ? "÷" : key}</button>`).join("");
+    const keypad = KEYPAD_KEYS.map((key) => {
+      const cls = ["+", "-", "*", "/"].includes(key) ? "key op" : key === "enter" ? "key enter" : key === "del" || key === "CE" ? "key danger" : "key";
+      return `<button type="button" class="${cls}" data-key="${key}">${key === "/" ? "÷" : key === "*" ? "×" : key}</button>`;
+    }).join("");
     return `
     <form class="answer-form" data-player-id="${player.id}">
       <label>${playerLabel(player)}<input name="expression" inputmode="text" placeholder="(2 + 3) × 4" required></label>
