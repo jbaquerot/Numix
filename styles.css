@@ -254,6 +254,10 @@ fieldset input[type="radio"] { margin: 0; }
 .scoreboard li:first-child strong { color: #451a03; }
 
 .answer-form { padding: .6rem .8rem; margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: .8rem; }
+.setup-top-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 1rem .75rem; }
+.setup-top-row > label { margin: 0; min-width: 9rem; }
+.setup-top-row > fieldset { margin: 0; }
+
 .player-fields { margin: .5rem 0; padding: .6rem .8rem; border-radius: .8rem; border: 2px dashed var(--line); }
 .player-summary { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
 .player-summary-icon { font-size: 1.3rem; }
@@ -311,8 +315,6 @@ fieldset input[type="radio"] { margin: 0; }
 
 @media (min-width: 48rem) {
   .app { padding: 2rem; }
-  #setup-form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-  #setup-form button, #setup-form fieldset, #setup-form #player-fields { grid-column: span 2; }
   #player-fields { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
   .cards li { width: 3.8rem; min-height: 4.8rem; font-size: 2rem; }
   .game-layout { grid-template-columns: 1fr 16rem; }
