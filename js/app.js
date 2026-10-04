@@ -131,7 +131,7 @@ const app = createApp(
     scoreboardView.hidden = false;
     renderScoreboard(scoreboardContainer, game.players);
     if (isGameOver) {
-      renderFinalResults(finalContainer, game.players, () => app.restart());
+      renderFinalResults(finalContainer, game.players, game.roundHistory, () => app.restart());
       return;
     }
     const drafts = captureDrafts(roundContainer);

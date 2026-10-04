@@ -1,4 +1,5 @@
 import { DIFFICULTIES, PLAYER_ICONS } from "./constants.js";
+import { computeBadges } from "./game.js";
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
@@ -223,10 +224,18 @@ export function renderRoundResults(container, answers, history, onNext, isLastRo
   container.querySelector("button").addEventListener("click", onNext);
 }
 
-export function renderFinalResults(container, players, onRestart) {
+function renderBadges(player, roundHistory, players) {
+  return `<div class="badges">${computeBadges(player, roundHistory, players).map((badge) => `
+    <div class="badge ${badge.unlocked ? "unlocked" : "locked"}" title="${escapeHtml(badge.label)}: ${escapeHtml(badge.description)}">
+      <span class="badge-icon" aria-hidden="true">${badge.unlocked ? badge.icon : "🔒"}</span>
+      <span class="badge-label">${escapeHtml(badge.label)}</span>
+    </div>`).join("")}</div>`;
+}
+
+export function renderFinalResults(container, players, roundHistory, onRestart) {
   const bestScore = Math.max(...players.map((player) => player.score));
   const winners = players.filter((player) => player.score === bestScore).map((player) => playerLabel(player)).join(", ");
   const sorted = [...players].sort((a, b) => b.score - a.score);
-  container.innerHTML = `<p>¡Ganadora${winners.includes(",") ? "s" : ""}: ${winners}!</p><ul>${sorted.map((player) => `<li>${playerLabel(player)}: ${player.score} puntos</li>`).join("")}</ul><button>Jugar de nuevo</button>`;
+  container.innerHTML = `<p>¡Ganadora${winners.includes(",") ? "s" : ""}: ${winners}!</p><ul class="final-players">${sorted.map((player) => `<li><div class="final-player-row"><span>${playerLabel(player)}</span><strong>${player.score} puntos</strong></div>${renderBadges(player, roundHistory, players)}</li>`).join("")}</ul><button>Jugar de nuevo</button>`;
   container.querySelector("button").addEventListener("click", onRestart);
 }

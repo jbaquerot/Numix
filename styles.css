@@ -286,6 +286,17 @@ fieldset input[type="radio"] { margin: 0; }
 .missed-message { margin: 0; font-weight: 600; color: #94836a; font-style: italic; }
 .no-answers { font-family: "Caveat", cursive; font-size: 1.5rem; color: #94836a; background: #fdf3df; border: 1px dashed var(--line); border-radius: .7rem; padding: 1rem; margin: .75rem 0; }
 
+.final-players { list-style: none; margin: .75rem 0; padding: 0; display: grid; gap: .6rem; }
+.final-players li { background: var(--paper); border: 2px solid var(--line); border-radius: .8rem; padding: .7rem .9rem; }
+.final-player-row { display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
+.final-player-row strong { font-family: "Caveat", cursive; font-size: 1.5rem; color: var(--orange); }
+.badges { display: flex; gap: .6rem; margin-top: .6rem; flex-wrap: wrap; }
+.badge { display: flex; flex-direction: column; align-items: center; gap: .25rem; width: 4rem; }
+.badge-icon { width: 2.6rem; height: 2.6rem; border-radius: 50%; display: grid; place-items: center; font-size: 1.2rem; background: #fdf3df; border: 2px solid var(--line); }
+.badge.unlocked .badge-icon { background: #fdeccb; border-color: var(--orange); }
+.badge.locked .badge-icon { opacity: .5; border-style: dashed; }
+.badge-label { font-size: .68rem; font-weight: 700; color: var(--ink); text-align: center; line-height: 1.1; }
+
 @media (min-width: 48rem) {
   .app { padding: 2rem; }
   #setup-form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }

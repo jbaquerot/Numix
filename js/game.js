@@ -50,3 +50,48 @@ export function remainingSeconds(round, now = Date.now()) {
 export function markReady(round, playerId) {
   return round.readyPlayerIds.includes(playerId) ? round : { ...round, readyPlayerIds: [...round.readyPlayerIds, playerId] };
 }
+
+const playerAnswerIn = (round, playerId) => round.answers.find((answer) => answer.playerId === playerId);
+
+export const BADGES = Object.freeze([
+  {
+    id: "precision",
+    icon: "🎯",
+    label: "Precisión",
+    description: "Alcanzó el objetivo exacto en alguna ronda.",
+    check: (player, roundHistory) => roundHistory.some((round) => playerAnswerIn(round, player.id)?.points === 2),
+  },
+  {
+    id: "racha",
+    icon: "🔥",
+    label: "Racha",
+    description: "Puntuó en 3 rondas seguidas.",
+    check: (player, roundHistory) => {
+      let streak = 0;
+      for (const round of roundHistory) {
+        streak = (playerAnswerIn(round, player.id)?.points ?? 0) > 0 ? streak + 1 : 0;
+        if (streak >= 3) return true;
+      }
+      return false;
+    },
+  },
+  {
+    id: "participacion",
+    icon: "🧮",
+    label: "Participación",
+    description: "Respondió en todas las rondas jugadas.",
+    check: (player, roundHistory) => roundHistory.length > 0 && roundHistory.every((round) => playerAnswerIn(round, player.id)),
+  },
+  {
+    id: "campeona",
+    icon: "🏆",
+    label: "Campeona",
+    description: "Terminó la partida con la puntuación más alta.",
+    check: (player, roundHistory, players) => player.score === Math.max(...players.map((entry) => entry.score)),
+  },
+]);
+
+/** Devuelve las insignias de una jugadora con su estado desbloqueado, a partir de datos reales de la partida. */
+export function computeBadges(player, roundHistory, players) {
+  return BADGES.map((badge) => ({ ...badge, unlocked: badge.check(player, roundHistory, players) }));
+}
