@@ -46,8 +46,8 @@ export function renderSetup(container, onSubmit) {
       <div class="setup-top-row">
         <label>Número de jugadoras <select name="playerCount">${[1, 2, 3, 4].map((value) => `<option value="${value}" ${value === count ? "selected" : ""}>${value}</option>`).join("")}</select></label>
         <label>Rondas <select name="rounds">${[5, 6, 7, 8, 9, 10].map((value) => `<option value="${value}">${value}</option>`).join("")}</select></label>
-        <fieldset><legend>Dificultad</legend>${Object.entries(DIFFICULTIES).map(([key, value]) =>
-          `<label><input type="radio" name="difficulty" value="${key}" ${key === "medium" ? "checked" : ""}> ${value.label} (${value.durationSeconds} s)</label>`).join("")}</fieldset>
+        <label>Dificultad <select name="difficulty">${Object.entries(DIFFICULTIES).map(([key, value]) =>
+          `<option value="${key}" ${key === "medium" ? "selected" : ""}>${value.label} (${value.durationSeconds} s)</option>`).join("")}</select></label>
       </div>
       <div id="player-fields">${renderPlayerFields(count, previousPlayers)}</div>
       <button type="submit">Empezar partida</button>
