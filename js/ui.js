@@ -43,11 +43,13 @@ export function renderSetup(container, onSubmit) {
   function render(count, previousPlayers) {
     container.innerHTML = `
     <form id="setup-form">
-      <label>Número de jugadoras <select name="playerCount">${[1, 2, 3, 4].map((value) => `<option value="${value}" ${value === count ? "selected" : ""}>${value}</option>`).join("")}</select></label>
+      <div class="setup-top-row">
+        <label>Número de jugadoras <select name="playerCount">${[1, 2, 3, 4].map((value) => `<option value="${value}" ${value === count ? "selected" : ""}>${value}</option>`).join("")}</select></label>
+        <label>Rondas <select name="rounds">${[5, 6, 7, 8, 9, 10].map((value) => `<option value="${value}">${value}</option>`).join("")}</select></label>
+        <label>Dificultad <select name="difficulty">${Object.entries(DIFFICULTIES).map(([key, value]) =>
+          `<option value="${key}" ${key === "medium" ? "selected" : ""}>${value.label} (${value.durationSeconds} s)</option>`).join("")}</select></label>
+      </div>
       <div id="player-fields">${renderPlayerFields(count, previousPlayers)}</div>
-      <label>Rondas <select name="rounds">${[5, 6, 7, 8, 9, 10].map((value) => `<option value="${value}">${value}</option>`).join("")}</select></label>
-      <fieldset><legend>Dificultad</legend>${Object.entries(DIFFICULTIES).map(([key, value]) =>
-        `<label><input type="radio" name="difficulty" value="${key}" ${key === "medium" ? "checked" : ""}> ${value.label} (${value.durationSeconds} s)</label>`).join("")}</fieldset>
       <button type="submit">Empezar partida</button>
     </form>`;
 
@@ -104,13 +106,13 @@ function hourglassMarkup(fraction) {
     <svg class="hourglass" viewBox="0 0 64 108" role="img" aria-label="Reloj de arena">
       <defs>
         <linearGradient id="hg-wood" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#a5744a" />
-          <stop offset=".55" stop-color="#714423" />
-          <stop offset="1" stop-color="#43260f" />
+          <stop offset="0" stop-color="#c7d2fe" />
+          <stop offset=".55" stop-color="#818cf8" />
+          <stop offset="1" stop-color="#3730a3" />
         </linearGradient>
         <linearGradient id="hg-sand" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#f8e0a4" />
-          <stop offset="1" stop-color="#c17f1f" />
+          <stop offset="0" stop-color="#67e8f9" />
+          <stop offset="1" stop-color="#0e7490" />
         </linearGradient>
         <clipPath id="hg-top-clip"><path d="${HOURGLASS_TOP_GLASS}" /></clipPath>
         <clipPath id="hg-bottom-clip"><path d="${HOURGLASS_BOTTOM_GLASS}" /></clipPath>
@@ -151,7 +153,10 @@ function renderPlayerPanel(player, round, timeUp) {
     </div>`;
   }
   if (round.readyPlayerIds.includes(player.id)) {
-    const keypad = KEYPAD_KEYS.map((key) => `<button type="button" class="key" data-key="${key}">${key === "/" ? "÷" : key}</button>`).join("");
+    const keypad = KEYPAD_KEYS.map((key) => {
+      const cls = ["+", "-", "*", "/"].includes(key) ? "key op" : key === "enter" ? "key enter" : key === "del" || key === "CE" ? "key danger" : "key";
+      return `<button type="button" class="${cls}" data-key="${key}">${key === "/" ? "÷" : key === "*" ? "×" : key}</button>`;
+    }).join("");
     return `
     <form class="answer-form" data-player-id="${player.id}">
       <label>${playerLabel(player)}<input name="expression" inputmode="text" placeholder="(2 + 3) × 4" required></label>
