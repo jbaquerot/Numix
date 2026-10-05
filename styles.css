@@ -267,6 +267,10 @@ button:disabled, input:disabled {
 .missed-message { margin: 0; font-weight: 600; color: var(--muted); font-style: italic; }
 .no-answers { font-family: "Fredoka", sans-serif; font-size: 1.2rem; color: var(--muted); background: var(--panel); border: 1px dashed var(--line); border-radius: .7rem; padding: 1rem; margin: .75rem 0; }
 
+.history-round { padding: .6rem .8rem; margin: .5rem 0; background: rgba(255, 255, 255, .04); border: 1px solid var(--line); border-radius: .7rem; }
+.history-round-head { margin: 0 0 .35rem; font-weight: 700; }
+.history-round-results { display: flex; flex-wrap: wrap; gap: .4rem .9rem; font-size: .9rem; color: var(--muted); }
+
 .final-players { list-style: none; margin: .75rem 0; padding: 0; display: grid; gap: .6rem; }
 .final-players li { background: var(--panel); border: 1px solid var(--line); border-radius: .8rem; padding: .7rem .9rem; }
 .final-player-row { display: flex; justify-content: space-between; align-items: center; font-weight: 700; }

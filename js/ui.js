@@ -221,11 +221,22 @@ export function renderScoreboard(container, players) {
   container.innerHTML = `<h2>Marcador</h2><ul class="scoreboard">${sorted.map((player) => `<li><span>${playerLabel(player)}</span><strong>${player.score}</strong></li>`).join("")}</ul>`;
 }
 
-export function renderRoundResults(container, answers, history, onNext, isLastRound = false) {
+function renderRoundHistoryEntry(round, players) {
+  const perPlayer = players.map((player) => {
+    const answer = round.answers.find((entry) => entry.playerId === player.id);
+    return `<span>${playerLabel(player)}: ${answer ? answer.result : "-"}</span>`;
+  }).join("");
+  return `<div class="history-round">
+    <p class="history-round-head">Ronda ${round.number}: objetivo ${round.target}</p>
+    <div class="history-round-results">${perPlayer}</div>
+  </div>`;
+}
+
+export function renderRoundResults(container, answers, history, players, onNext, isLastRound = false) {
   const resultsBody = answers.length
     ? `<ul class="round-results">${answers.map((answer) => `<li><span>${playerLabel(answer.player)}: ${escapeHtml(answer.expression)} = <strong class="result-value">${answer.result}</strong></span><strong class="earned-points">+${answer.points}</strong></li>`).join("")}</ul>`
     : `<p class="no-answers">⏳ Nadie pulsó "Ya lo tengo" a tiempo. Ronda sin puntos para nadie.</p>`;
-  container.innerHTML = `${resultsBody}<section class="history"><h3>Rondas jugadas</h3>${history.map((round) => `<p>Ronda ${round.number}: objetivo ${round.target}</p>`).join("")}</section><button id="next-round">${isLastRound ? "Ver resultado final" : "Siguiente ronda"}</button>`;
+  container.innerHTML = `${resultsBody}<section class="history"><h3>Rondas jugadas</h3>${history.map((round) => renderRoundHistoryEntry(round, players)).join("")}</section><button id="next-round">${isLastRound ? "Ver resultado final" : "Siguiente ronda"}</button>`;
   container.querySelector("button").addEventListener("click", onNext);
 }
 
