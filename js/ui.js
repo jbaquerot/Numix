@@ -221,11 +221,26 @@ export function renderScoreboard(container, players) {
   container.innerHTML = `<h2>Marcador</h2><ul class="scoreboard">${sorted.map((player) => `<li><span>${playerLabel(player)}</span><strong>${player.score}</strong></li>`).join("")}</ul>`;
 }
 
-export function renderRoundResults(container, answers, history, onNext, isLastRound = false) {
+function renderRoundHistoryTable(history, players) {
+  const rows = history.map((round) => {
+    const cells = players.map((player) => {
+      const answer = round.answers.find((entry) => entry.playerId === player.id);
+      return `<td>${answer ? answer.result : "-"}</td>`;
+    }).join("");
+    return `<tr><td>${round.number}</td><td>${round.target}</td>${cells}</tr>`;
+  }).join("");
+  const headerCells = players.map((player) => `<th scope="col">${playerLabel(player)}</th>`).join("");
+  return `<div class="history-table-wrap"><table class="history-table">
+    <thead><tr><th scope="col">Ronda</th><th scope="col">Objetivo</th>${headerCells}</tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+export function renderRoundResults(container, answers, history, players, onNext, isLastRound = false) {
   const resultsBody = answers.length
     ? `<ul class="round-results">${answers.map((answer) => `<li><span>${playerLabel(answer.player)}: ${escapeHtml(answer.expression)} = <strong class="result-value">${answer.result}</strong></span><strong class="earned-points">+${answer.points}</strong></li>`).join("")}</ul>`
     : `<p class="no-answers">⏳ Nadie pulsó "Ya lo tengo" a tiempo. Ronda sin puntos para nadie.</p>`;
-  container.innerHTML = `${resultsBody}<section class="history"><h3>Rondas jugadas</h3>${history.map((round) => `<p>Ronda ${round.number}: objetivo ${round.target}</p>`).join("")}</section><button id="next-round">${isLastRound ? "Ver resultado final" : "Siguiente ronda"}</button>`;
+  container.innerHTML = `${resultsBody}<section class="history"><h3>Rondas jugadas</h3>${renderRoundHistoryTable(history, players)}</section><button id="next-round">${isLastRound ? "Ver resultado final" : "Siguiente ronda"}</button>`;
   container.querySelector("button").addEventListener("click", onNext);
 }
 

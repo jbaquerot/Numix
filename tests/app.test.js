@@ -98,13 +98,18 @@ test("last-round result view offers the final screen instead of another round", 
       return button;
     },
   };
+  const players = [{ id: "p1", name: "Ana", icon: "➕" }, { id: "p2", name: "Bea", icon: "➖" }];
   renderRoundResults(container,
-    [{ player: { name: "Ana", icon: "➕" }, expression: "2+3", result: 5, points: 2 }],
-    [{ number: 5, target: 5 }],
+    [{ player: players[0], expression: "2+3", result: 5, points: 2 }],
+    [{ number: 5, target: 5, answers: [{ playerId: "p1", result: 5 }] }],
+    players,
     () => { next += 1; }, true);
   assert.match(container.innerHTML, /Ana: 2\+3 =/);
   assert.match(container.innerHTML, /\+2/);
-  assert.match(container.innerHTML, /Ronda 5: objetivo 5/);
+  assert.match(container.innerHTML, /<table class="history-table">/);
+  assert.match(container.innerHTML, /<th scope="col">➕ Ana<\/th>/);
+  assert.match(container.innerHTML, /<th scope="col">➖ Bea<\/th>/);
+  assert.match(container.innerHTML, /<tr><td>5<\/td><td>5<\/td><td>5<\/td><td>-<\/td><\/tr>/, "round 5: target 5, Ana scored 5, Bea never answered ('-')");
   assert.match(container.innerHTML, /Ver resultado final/);
   assert.doesNotMatch(container.innerHTML, /Siguiente ronda/);
   button.click();
