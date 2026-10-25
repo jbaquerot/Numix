@@ -35,6 +35,18 @@ test("remainingSeconds llega a cero y se queda ahí cuando pasa el tiempo", () =
   assert.equal(remainingSeconds(round, 60000), 0);
 });
 
+test("con dificultad sin límite (durationSeconds nulo), el tiempo restante nunca llega a cero", () => {
+  const round = startResolving(createRound(1), null, 1000);
+  assert.equal(round.endsAt, null);
+  assert.equal(remainingSeconds(round, 1000), Infinity);
+  assert.equal(remainingSeconds(round, 1000 * 60 * 60 * 24 * 365), Infinity, "sigue sin límite aunque pase un año");
+});
+
+test("createGame acepta la dificultad sin límite", () => {
+  const game = createGame({ players: [player("Ana")], totalRounds: 5, difficulty: "unlimited" });
+  assert.equal(game.settings.durationSeconds, null);
+});
+
 test("una jugadora puede marcarse lista en cualquier momento, sin duplicarse", () => {
   const round = createRound(1);
   const ready = markReady(round, "p1");

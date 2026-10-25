@@ -15,6 +15,7 @@ export const DIFFICULTIES = Object.freeze({
   easy: Object.freeze({ label: "Fácil", durationSeconds: 60 }),
   medium: Object.freeze({ label: "Medio", durationSeconds: 45 }),
   hard: Object.freeze({ label: "Difícil", durationSeconds: 30 }),
+  unlimited: Object.freeze({ label: "Sin límite", durationSeconds: null }),
 });
 
 export const ROUND_PHASES = Object.freeze({
