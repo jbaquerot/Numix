@@ -140,9 +140,10 @@ const app = createApp(
     restoreDrafts(roundContainer, drafts);
   },
   (seconds, durationSeconds) => {
+    if (durationSeconds == null) return;
     const timerEl = roundContainer.querySelector(".timer");
     if (timerEl) timerEl.textContent = `${seconds} s`;
-    updateHourglass(roundContainer, durationSeconds > 0 ? seconds / durationSeconds : 0);
+    updateHourglass(roundContainer, seconds / durationSeconds);
   },
 );
 

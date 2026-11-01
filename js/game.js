@@ -40,10 +40,12 @@ export function scoreRound(target, answers) {
 }
 
 export function startResolving(round, durationSeconds, now = Date.now()) {
-  return { ...round, phase: ROUND_PHASES.resolving, endsAt: now + durationSeconds * 1000 };
+  return { ...round, phase: ROUND_PHASES.resolving, endsAt: durationSeconds == null ? null : now + durationSeconds * 1000 };
 }
 
+/** Sin límite de tiempo (endsAt nulo), el tiempo restante nunca llega a cero. */
 export function remainingSeconds(round, now = Date.now()) {
+  if (round.endsAt == null) return Infinity;
   return Math.max(0, Math.ceil((round.endsAt - now) / 1000));
 }
 

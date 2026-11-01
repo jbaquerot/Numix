@@ -47,7 +47,7 @@ export function renderSetup(container, onSubmit) {
         <label>Número de jugadoras <select name="playerCount">${[1, 2, 3, 4].map((value) => `<option value="${value}" ${value === count ? "selected" : ""}>${value}</option>`).join("")}</select></label>
         <label>Rondas <select name="rounds">${[5, 6, 7, 8, 9, 10].map((value) => `<option value="${value}">${value}</option>`).join("")}</select></label>
         <label>Dificultad <select name="difficulty">${Object.entries(DIFFICULTIES).map(([key, value]) =>
-          `<option value="${key}" ${key === "medium" ? "selected" : ""}>${value.label} (${value.durationSeconds} s)</option>`).join("")}</select></label>
+          `<option value="${key}" ${key === "medium" ? "selected" : ""}>${value.durationSeconds != null ? `${value.label} (${value.durationSeconds} s)` : value.label}</option>`).join("")}</select></label>
       </div>
       <div id="player-fields">${renderPlayerFields(count, previousPlayers)}</div>
       <button type="submit">Empezar partida</button>
@@ -180,14 +180,14 @@ function renderPlayerPanel(player, round, timeUp) {
 
 export function renderRound(container, game, secondsRemaining, onReady, onAnswer) {
   const { currentRound: round, players } = game;
-  const fraction = game.settings.durationSeconds > 0 ? secondsRemaining / game.settings.durationSeconds : 0;
+  const isUnlimited = game.settings.durationSeconds == null;
+  const timerWrap = isUnlimited
+    ? `<p class="timer timer-unlimited" aria-label="Sin límite de tiempo">∞ Sin límite</p>`
+    : `<p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p>${hourglassMarkup(secondsRemaining / game.settings.durationSeconds)}`;
   container.innerHTML = `
     <div class="round-head">
       <h2>Ronda ${round.number} de ${game.settings.totalRounds}</h2>
-      <div class="timer-wrap">
-        <p class="timer" aria-label="Tiempo restante">${secondsRemaining} s</p>
-        ${hourglassMarkup(fraction)}
-      </div>
+      <div class="timer-wrap">${timerWrap}</div>
     </div>
     <div class="challenge">
       <p class="target">Objetivo: <strong>${round.target}</strong></p>

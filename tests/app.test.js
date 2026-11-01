@@ -74,6 +74,25 @@ test("if nobody presses ready before time runs out, the round closes with no poi
   app.dispose();
 });
 
+test("with the unlimited difficulty, a round never auto-closes from a timeout", (t) => {
+  t.mock.timers.enable({ apis: ["setInterval", "Date"] });
+  const app = createApp(() => {});
+  app.createGame({ players: [{ name: "Ana", icon: "➕" }, { name: "Bea", icon: "➖" }], totalRounds: 5, difficulty: "unlimited" });
+  app.startRound();
+  t.mock.timers.tick(1000 * 60 * 60 * 24);
+  assert.equal(app.getState().currentRound.phase, "resolving", "no timeout exists in unlimited mode, so nobody is ever forced out");
+  app.markReady("p1");
+  app.markReady("p2");
+  t.mock.timers.tick(1000 * 60 * 60 * 24);
+  assert.equal(app.getState().currentRound.phase, "resolving", "both readied but haven't answered yet; still no forced timeout or missed state");
+  const card = app.getState().currentRound.cards[0];
+  app.submitAnswer("p1", String(card));
+  assert.equal(app.getState().currentRound.phase, "resolving", "still waiting on Bea to answer");
+  app.submitAnswer("p2", String(card));
+  assert.equal(app.getState().currentRound.phase, "results", "round completes normally once everyone ready has answered");
+  app.dispose();
+});
+
 test("once time is up, a player who never readied can no longer press the button", (t) => {
   t.mock.timers.enable({ apis: ["setInterval", "Date"] });
   const app = createApp(() => {});
