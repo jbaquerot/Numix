@@ -136,7 +136,7 @@ const app = createApp(
     }
     const drafts = captureDrafts(roundContainer);
     if (round.phase === "resolving") renderRound(roundContainer, game, remainingSeconds(round), app.markReady, app.submitAnswer);
-    if (round.phase === "results") renderRoundResults(roundContainer, round.answers.map((answer) => ({ ...answer, player: game.players.find((player) => player.id === answer.playerId) })), game.roundHistory, isLastRound ? () => app.showFinal() : () => app.startRound(), isLastRound);
+    if (round.phase === "results") renderRoundResults(roundContainer, round.answers.map((answer) => ({ ...answer, player: game.players.find((player) => player.id === answer.playerId) })), game.roundHistory, game.players, isLastRound ? () => app.showFinal() : () => app.startRound(), isLastRound);
     restoreDrafts(roundContainer, drafts);
   },
   (seconds, durationSeconds) => {
